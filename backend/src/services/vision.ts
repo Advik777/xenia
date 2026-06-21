@@ -76,7 +76,9 @@ export async function runVisionScan(
       'https://integrate.api.nvidia.com/v1/chat/completions',
       { Authorization: `Bearer ${env.NVIDIA_NIM_API_KEY}` },
       {
-        model: 'nvidia/llama-3.2-90b-vision-instruct',
+        // NVIDIA hosts Llama 3.2 Vision under the `meta/` namespace. (The product
+        // spec's `nvidia/...` id is the internal registry key only — see models.ts.)
+        model: 'meta/llama-3.2-90b-vision-instruct',
         max_tokens: MAX_TOKENS,
         messages: buildMessages(base64Image),
       },

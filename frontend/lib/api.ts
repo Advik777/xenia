@@ -39,8 +39,12 @@ export async function apiFetch<T = unknown>(
   }
 
   if (!res.ok) {
-    const data = body as { error?: string; code?: string } | null;
-    const err = new Error(data?.error ?? `Request failed (${res.status})`) as ApiError;
+    const data = body as { error?: string; code?: string; detail?: string } | null;
+    // In dev the backend includes a `detail` field with the underlying cause.
+    const msg = data?.detail
+      ? `${data.error ?? `Request failed (${res.status})`} — ${data.detail}`
+      : data?.error ?? `Request failed (${res.status})`;
+    const err = new Error(msg) as ApiError;
     err.status = res.status;
     err.code = data?.code;
     throw err;

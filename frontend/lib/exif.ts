@@ -260,14 +260,40 @@ export function stripMetadata(file: File): Promise<StripResult> {
   });
 }
 
-/** Strips metadata and returns raw base64 (no data-URL prefix) for the API. */
-export async function stripAndEncode(file: File): Promise<string> {
-  const { blob } = await stripMetadata(file);
-  const dataUrl: string = await new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = () => reject(new Error('read failed'));
-    reader.readAsDataURL(blob);
-  });
-  return dataUrl.split(',')[1] ?? '';
+/**
+ * Strips metadata, downscales to fit within `maxDim` on the longest edge, and
+ * returns raw base64 JPEG (no data-URL prefix) for the vision API.
+ *
+ * Downscaling matters: vision gateways (notably NVIDIA NIM) reject inline
+ * base64 images above a size threshold — a full-res phone photo will 4xx and
+ * surface as a generic 500. ~1280px is plenty for the model to read signs and
+ * plates, and keeps the payload small + the token cost low. The full-resolution
+ * copy is still used for the download (see stripMetadata).
+ */
+export async function stripAndEncode(file: File, maxDim = 1280): Promise<string> {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const i = new Image();
+      i.onload = () => resolve(i);
+      i.onerror = () => reject(new Error('decode failed'));
+      i.src = url;
+    });
+
+    const w = img.naturalWidth || img.width;
+    const h = img.naturalHeight || img.height;
+    const scale = Math.min(1, maxDim / Math.max(w, h));
+
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(w * scale));
+    canvas.height = Math.max(1, Math.round(h * scale));
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('no 2d context');
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+    return dataUrl.split(',')[1] ?? '';
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }
