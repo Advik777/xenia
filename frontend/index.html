@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./config.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+  <style>
+    :root, [data-theme="dark"]{
+      --teal:#2dd4bf; --violet:#8b5cf6; --pink:#f472b6;
+      --grad:linear-gradient(120deg,var(--teal),var(--violet),var(--pink));
+      --bg:#000000; --surface:#0c0c12;
+      --card:rgba(255,255,255,.045); --card-hover:rgba(255,255,255,.07);
+      --border:rgba(255,255,255,.09); --border-strong:rgba(255,255,255,.14);
+      --chip:rgba(255,255,255,.03);
+      --ink:#f4f3fb; --muted:rgba(244,243,251,.62); --muted-2:rgba(244,243,251,.46);
+      --btn:#ffffff; --btn-ink:#000000;
+    }
+    [data-theme="light"]{
+      --bg:#f1f1ee; --surface:#ffffff;
+      --card:rgba(0,0,0,.04); --card-hover:rgba(0,0,0,.07);
+      --border:rgba(0,0,0,.1); --border-strong:rgba(0,0,0,.16);
+      --chip:rgba(0,0,0,.03);
+      --ink:#16181d; --muted:rgba(22,24,29,.64); --muted-2:rgba(22,24,29,.5);
+      --btn:#000000; --btn-ink:#ffffff;
+    }
+    *{box-sizing:border-box;}
+    body{margin:0; background:var(--bg); color:var(--ink); transition:background-color .35s ease, color .35s ease; -webkit-font-smoothing:antialiased; font-family:'Newsreader',Georgia,serif;}
+    @property --irisA{ syntax:'<angle>'; initial-value:0deg; inherits:false; }
+    @property --chromeA{ syntax:'<angle>'; initial-value:90deg; inherits:false; }
+    @keyframes irisSpin{ to{ --irisA:360deg; } }
+    @keyframes chromeSpin{ from{ --chromeA:90deg; } to{ --chromeA:450deg; } }
+    @property --aiA{ syntax:'<angle>'; initial-value:0deg; inherits:false; }
+    @keyframes aiSpin{ to{ --aiA:360deg; } }
+    @keyframes textShimmer{0%{background-position:0% 50%;}100%{background-position:300% 50%;}}
+    @keyframes sparkleFloat{0%{opacity:0; transform:translateY(12px) scale(.3);}25%{opacity:1;}55%{opacity:1;}100%{opacity:0; transform:translateY(-34px) scale(1);}}
+    @keyframes tileIn{
+      0%{ transform:translate(var(--sx),var(--sy)) rotate(var(--srot)) scale(.34); opacity:0; filter:blur(16px); }
+      20%{ opacity:1; }
+      52%{ transform:translate(var(--mx),var(--my)) rotate(calc(var(--srot) * .18)) scale(.96); filter:blur(5px); }
+      70%{ transform:translate(0,0) rotate(0deg) scale(1); opacity:1; filter:blur(4px); }
+      85%{ transform:translate(0,0) rotate(0deg) scale(1); filter:blur(3px); }
+      100%{ transform:translate(0,0) rotate(0deg) scale(1); opacity:1; filter:blur(0); }
+    }
+    @keyframes floatUp{0%{opacity:0; transform:translateY(0) scale(.85);}18%{opacity:1;}100%{opacity:0; transform:translateY(-170px) scale(1.08);}}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    @keyframes spinRev{to{transform:rotate(-360deg);}}
+    @keyframes sheen{0%{background-position:200% 0;}100%{background-position:-120% 0;}}
+    @keyframes breathe{0%,100%{transform:scale(1);}50%{transform:scale(1.035);}}
+    @keyframes dotPulse{0%,100%{opacity:1; transform:scale(1);}50%{opacity:.35; transform:scale(.7);}}
+    @keyframes pulseSoft{0%,100%{opacity:.18;}50%{opacity:.4;}}
+    @keyframes riseIn{from{opacity:0; transform:translateY(16px);}to{opacity:1; transform:translateY(0);}}
+    details summary{list-style:none; cursor:pointer;}
+    #brand-logo{ background-color:var(--ink); }
+    @keyframes logoBlink{ 0%{ background-color:var(--gold); } 100%{ background-color:var(--ink); } }
+    .logo-blink{ animation:logoBlink 0.85s ease-out forwards; }
+    .metal-btn{ border:2px solid transparent !important; background:linear-gradient(var(--btn),var(--btn)) padding-box, conic-gradient(from var(--irisA) at 50% 50%, transparent 0deg, #2dffcf 13deg, #2dffcf 17deg, transparent 21deg, transparent 60deg, #38b6ff 73deg, #38b6ff 77deg, transparent 81deg, transparent 130deg, #9b6bff 143deg, #9b6bff 147deg, transparent 151deg, transparent 196deg, #ff5fd0 209deg, #ff5fd0 213deg, transparent 217deg, transparent 262deg, #ffb13d 275deg, #ffb13d 279deg, transparent 283deg, transparent 320deg, #4dff9e 332deg, #4dff9e 336deg, transparent 340deg, transparent 360deg) border-box, conic-gradient(from var(--chromeA) at 50% 50%, #ffffff 0deg, #c4cbd4 7deg, #474d57 18deg, #14161c 28deg, #b0b7c0 42deg, #ffffff 52deg, #565c66 64deg, #1a1d24 76deg, #cdd3db 90deg, #ffffff 100deg, #3c414b 116deg, #101218 130deg, #9aa1aa 148deg, #ffffff 160deg, #4a505a 174deg, #14161c 186deg, #c4cbd4 202deg, #ffffff 214deg, #50565f 230deg, #16181e 244deg, #b0b7c0 262deg, #ffffff 276deg, #3c414b 292deg, #101218 306deg, #aab1ba 326deg, #ffffff 344deg, #ffffff 360deg) border-box !important; color:var(--btn-ink) !important; box-shadow:none !important; animation:irisSpin 15s linear infinite, chromeSpin 24s linear infinite; }
+    .inv-btn{ position:relative; z-index:0; overflow:hidden; transition:color .45s ease; }
+    .inv-btn::before{ content:''; position:absolute; inset:0; z-index:-1; border-radius:inherit; background:var(--btn-ink); transform:scaleX(0); transform-origin:left center; transition:transform .45s ease; }
+    .inv-btn:hover::before{ transform:scaleX(1); }
+    .inv-btn:hover{ color:var(--btn) !important; }
+    .hero-pill{ transition:border-color .25s ease, box-shadow .25s ease, color .25s ease; }
+    .hero-pill:hover{ border-color:#fb4d4d !important; color:#ff6b6b !important; box-shadow:0 0 16px rgba(251,77,77,.5), inset 0 0 9px rgba(251,77,77,.18); }
+    .gold-hover{ border-color:transparent !important; transition:border-color .3s ease; }
+    .gold-hover:hover{ border-color:var(--gold) !important; }
+    details summary::-webkit-details-marker{display:none;}
+    .faq-ic{transition:transform .25s ease;}
+    details[open] .faq-ic{transform:rotate(45deg);}
+    .sample-underline{position:relative; display:inline-block;}
+    .sample-underline::after{content:''; position:absolute; left:0; bottom:1px; height:1.5px; width:100%; background:currentColor; transform:scaleX(0); transform-origin:right center; transition:transform .32s ease;}
+    .sample-underline:hover::after{transform:scaleX(1); transform-origin:left center;}
+    ::view-transition-old(root),::view-transition-new(root){ animation-duration:0.8s; animation-timing-function:cubic-bezier(.4,0,.2,1); }
+    @keyframes toggleOut{ to{ opacity:0; transform:rotateX(90deg); } }
+    @keyframes toggleIn{ from{ opacity:0; transform:rotateX(-90deg); } to{ opacity:1; transform:rotateX(0deg); } }
+    ::view-transition-old(theme-toggle){ animation:toggleOut .55s cubic-bezier(.4,0,.2,1) both; }
+    ::view-transition-new(theme-toggle){ animation:toggleIn .55s cubic-bezier(.4,0,.2,1) both; }
+    :root{ interpolate-size: allow-keywords; }
+    details::details-content{ height:0; opacity:0; overflow:hidden; transition:height .4s cubic-bezier(.4,0,.2,1), opacity .3s ease, content-visibility .4s allow-discrete; }
+    details[open]::details-content{ height:auto; opacity:1; }
+    @media (max-width:760px){
+      header nav{ display:none; }
+      header > div{ padding-left:18px !important; padding-right:18px !important; }
+      section[id]{ padding:60px 18px !important; }
+    }
+  </style>
+</helmet>
+
+<div data-screen-label="Xyris" style="position:relative; min-height:100vh; overflow:visible; background:var(--bg); color:var(--ink); display:flex; flex-direction:column;">
+
+  <sc-if value="{{ grainOn }}" hint-placeholder-val="{{ true }}">
+    <div style="position:fixed; inset:0; z-index:1; pointer-events:none; mix-blend-mode:overlay; opacity:.05; background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%222%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E');"></div>
+  </sc-if>
+
+  <!-- header -->
+  <header style="position:sticky; top:0; z-index:20; width:100%; background:var(--header-bg, transparent); -webkit-backdrop-filter:var(--header-blur, none); backdrop-filter:var(--header-blur, none); border-bottom:1px solid var(--header-border, transparent); transition:background .3s ease, backdrop-filter .3s ease, border-color .3s ease;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:32px; padding:16px 44px; max-width:1460px; width:100%; margin:0 auto;">
+      <div style="display:flex; align-items:center; gap:11px;">
+        <a href="#top" onClick="{{ onLogoClick }}" aria-label="Xyris Vision — home" style="display:flex; align-items:flex-start; text-decoration:none;"><span id="brand-logo" role="img" aria-label="Xyris Vision" style="display:block; width:182px; height:24px; -webkit-mask:url(xyris-logo.png) no-repeat left center / contain; mask:url(xyris-logo.png) no-repeat left center / contain;"></span><sup style="font-family:'Newsreader',Georgia,serif; font-size:10px; letter-spacing:.22em; font-weight:600; color:var(--gold); margin-left:5px; align-self:flex-start; margin-top:2px;">VISION</sup></a>
+      </div>
+      <nav style="position:relative; display:flex; align-items:center; gap:30px;">
+        <a href="#features" onClick="{{ onNavClick }}" style="font-size:14px; color:var(--muted); text-decoration:none; cursor:pointer; transition:color .2s;" style-hover="color:var(--ink);">Features</a>
+        <a href="#privacy" onClick="{{ onNavClick }}" style="font-size:14px; color:var(--muted); text-decoration:none; cursor:pointer; transition:color .2s;" style-hover="color:var(--ink);">Privacy</a>
+        <a href="#pricing" onClick="{{ onNavClick }}" style="font-size:14px; color:var(--muted); text-decoration:none; cursor:pointer; transition:color .2s;" style-hover="color:var(--ink);">Pricing</a>
+        <a href="#faq" onClick="{{ onNavClick }}" style="font-size:14px; color:var(--muted); text-decoration:none; cursor:pointer; transition:color .2s;" style-hover="color:var(--ink);">FAQ</a>
+        <span id="nav-underline" style="position:absolute; bottom:-7px; left:0; width:0; height:2px; border-radius:2px; background:var(--gold); opacity:0; pointer-events:none; transition:left .34s cubic-bezier(.4,0,.2,1), width .34s cubic-bezier(.4,0,.2,1), opacity .25s ease;"></span>
+      </nav>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <sc-if value="{{ showCreditsBadge }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ onOpenAccount }}" style="height:34px; padding:0 13px; border-radius:999px; background:var(--chip); border:1px solid var(--border-strong); color:var(--ink); cursor:pointer; font-family:'Newsreader',Georgia,serif; font-size:12.5px;">Credits: {{ balanceText }}</button>
+        </sc-if>
+        <button onClick="{{ onToggleTheme }}" aria-label="Toggle light or dark mode" style="display:flex; align-items:center; gap:9px; height:38px; padding:0 15px; border-radius:999px; background:var(--card); border:1px solid var(--border); color:var(--ink); cursor:pointer; font-family:'Newsreader',Georgia,serif; font-size:14px; view-transition-name:theme-toggle; transition:background .2s, transform .2s;" style-hover="background:var(--card-hover); transform:translateY(-1px);">
+        <span style="position:relative; display:block; width:15px; height:15px; border-radius:50%; border:1.6px solid currentColor; overflow:hidden; flex:none;">
+          <span style="position:absolute; top:-1px; bottom:-1px; left:50%; right:-1px; background:currentColor;"></span>
+        </span>
+        <span id="theme-label">Umbra</span>
+        </button>
+        <sc-if value="{{ showAuth }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ onOpenAccount }}" style="height:38px; padding:0 14px; border-radius:999px; background:var(--card); border:1px solid var(--border); color:var(--ink); cursor:pointer; font-family:'Newsreader',Georgia,serif; font-size:13.5px;">Account</button>
+          </sc-if>
+          <sc-if value="{{ notSignedIn }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ onSignIn }}" style="height:38px; padding:0 18px; border-radius:999px; background:var(--btn); border:none; color:var(--btn-ink); cursor:pointer; font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:13.5px; white-space:nowrap; flex:none;">Sign in</button>
+          </sc-if>
+        </sc-if>
+      </div>
+    </div>
+  </header>
+
+  <main style="position:relative; z-index:2; display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:calc(100vh - 70px); padding:24px 24px 60px; width:100%;">
+
+    <!-- ============ HERO / IDLE ============ -->
+    <sc-if value="{{ stageIdle }}" hint-placeholder-val="{{ true }}">
+      <div id="top" data-screen-label="Home" style="max-width:760px; width:100%; text-align:center; animation:riseIn .7s ease both;">
+        <div style="display:inline-flex; align-items:center; justify-content:center; padding:8px 16px; border-radius:999px; background:var(--card); border:1px solid #2ee06a; font-size:12px; line-height:1; color:var(--muted);">
+          <span style="display:inline-block; transform:translateY(1px);">Fully On-Device · You're in control of your Data</span>
+        </div>
+        <h1 style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:clamp(44px,6.2vw,74px); line-height:1.0; letter-spacing:-.015em; margin:22px 0 0;">
+          Share the moment.<br>Not <span style="font-style:italic; background:linear-gradient(110deg,#2bffe0,#a86bff 50%,#ff4fc8); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 26px rgba(168,120,255,.6)) saturate(1.3);">your identity.</span>
+        </h1>
+        <p style="max-width:540px; margin:20px auto 0; font-size:16px; line-height:1.55; color:var(--muted);">
+          Every photo carries hidden GPS, device and timestamp data. Xyris finds it, shows you exactly what leaks — and strips it out before you post. All in your browser. Your images are never stored, and never leave your device.
+        </p>
+
+        <div style="max-width:440px; margin:34px auto 0;">
+          <label for="veil-file" onDragOver="{{ onDragOver }}" onDragLeave="{{ onDragLeave }}" onDrop="{{ onDrop }}" onMouseMove="{{ onCardMove }}" onMouseLeave="{{ onCardLeave }}" style="display:block; padding:3px; border-radius:22px; background:conic-gradient(from var(--irisA) at 50% 50%, transparent 0deg, #2dffcf 13deg, #2dffcf 17deg, transparent 21deg, transparent 60deg, #38b6ff 73deg, #38b6ff 77deg, transparent 81deg, transparent 130deg, #9b6bff 143deg, #9b6bff 147deg, transparent 151deg, transparent 196deg, #ff5fd0 209deg, #ff5fd0 213deg, transparent 217deg, transparent 262deg, #ffb13d 275deg, #ffb13d 279deg, transparent 283deg, transparent 320deg, #4dff9e 332deg, #4dff9e 336deg, transparent 340deg, transparent 360deg), conic-gradient(from var(--chromeA) at 50% 50%, #ffffff 0deg, #c4cbd4 7deg, #474d57 18deg, #14161c 28deg, #b0b7c0 42deg, #ffffff 52deg, #565c66 64deg, #1a1d24 76deg, #cdd3db 90deg, #ffffff 100deg, #3c414b 116deg, #101218 130deg, #9aa1aa 148deg, #ffffff 160deg, #4a505a 174deg, #14161c 186deg, #c4cbd4 202deg, #ffffff 214deg, #50565f 230deg, #16181e 244deg, #b0b7c0 262deg, #ffffff 276deg, #3c414b 292deg, #101218 306deg, #aab1ba 326deg, #ffffff 344deg, #ffffff 360deg); background-size:100% 100%, 100% 100%; background-blend-mode:normal, normal; animation:irisSpin 15s linear infinite, chromeSpin 24s linear infinite; box-shadow:inset 0 1px 1px rgba(255,255,255,.65); cursor:pointer; transition:transform .14s ease, box-shadow .25s, filter .25s; transform-style:preserve-3d; will-change:transform;" style-hover="filter:brightness(1.08); box-shadow:inset 0 1px 1px rgba(255,255,255,.7);">
+            <div style="position:relative; overflow:hidden; display:flex; flex-direction:column; align-items:center; gap:15px; padding:43px 30px; border-radius:19px; background:var(--surface); box-shadow:inset 0 1px 3px rgba(0,0,0,.12);">
+              <div style="position:relative; z-index:2; text-align:center;">
+                <div style="font-family:'Newsreader',Georgia,serif; font-size:18px; font-weight:600;">Drop a photo to scan it</div>
+                <div style="margin-top:5px; font-size:13px; color:var(--muted);">Any image format · never leaves your device</div>
+              </div>
+              <div style="position:relative; z-index:2; display:inline-flex; align-items:center; gap:9px; white-space:nowrap; padding:11px 20px 11px 18px; border-radius:12px; color:var(--btn-ink); background:var(--btn); box-shadow:0 3px 10px rgba(0,0,0,.18); transition:transform .2s, box-shadow .2s, background .35s ease, color .35s ease;">
+                <span style="position:relative; display:inline-block; width:15px; height:16px;">
+                  <span style="position:absolute; left:50%; top:0; transform:translateX(-50%); width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-bottom:6px solid currentColor;"></span>
+                  <span style="position:absolute; left:50%; top:5px; transform:translateX(-50%); width:2px; height:6px; background:currentColor;"></span>
+                  <span style="position:absolute; left:0; bottom:0; width:15px; height:5px; border:2px solid currentColor; border-top:none; border-radius:0 0 2px 2px;"></span>
+                </span>
+                <span style="font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:15px; letter-spacing:.01em;">Upload file</span>
+              </div>
+              <sc-if value="{{ dragOver }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute; inset:0; z-index:3; border-radius:19px; background:rgba(45,212,191,.16); display:flex; align-items:center; justify-content:center; font-family:'Newsreader',Georgia,serif; font-weight:500; color:var(--teal); letter-spacing:.02em;">Drop to scan</div>
+              </sc-if>
+            </div>
+          </label>
+          <input id="veil-file" type="file" accept="image/*" onChange="{{ onPick }}" style="display:none;">
+          <input id="batch-file" type="file" accept="image/*" multiple onChange="{{ onBatchPick }}" style="display:none;">
+
+          <div style="display:flex; align-items:center; justify-content:center; gap:16px; margin-top:18px;">
+            <button onClick="{{ onSample }}" class="sample-underline" style="background:none; border:none; cursor:pointer; font-family:'Newsreader',Georgia,serif; font-size:14px; color:var(--ink); padding:6px 4px; transition:opacity .2s;" style-hover="opacity:.7;">Try a sample photo →</button>
+            <span style="color:var(--muted-2);">·</span>
+            <button onClick="{{ onAddMoreBatch }}" class="sample-underline" style="background:none; border:none; cursor:pointer; font-family:'Newsreader',Georgia,serif; font-size:14px; color:var(--ink); padding:6px 4px; transition:opacity .2s;" style-hover="opacity:.7;">Clean several at once →</button>
+          </div>
+          <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:10px; font-size:13px; color:#fb7185;">{{ error }}</div>
+          </sc-if>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:30px;">
+          <span class="hero-pill" style="font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.05em; color:var(--muted-2); padding:6px 11px; border-radius:999px; border:1px solid var(--border); background:var(--chip);">GPS location</span>
+          <span class="hero-pill" style="font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.05em; color:var(--muted-2); padding:6px 11px; border-radius:999px; border:1px solid var(--border); background:var(--chip);">Camera &amp; device</span>
+          <span class="hero-pill" style="font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.05em; color:var(--muted-2); padding:6px 11px; border-radius:999px; border:1px solid var(--border); background:var(--chip);">Date &amp; time</span>
+          <span class="hero-pill" style="font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.05em; color:var(--muted-2); padding:6px 11px; border-radius:999px; border:1px solid var(--border); background:var(--chip);">Software</span>
+          <span class="hero-pill" style="font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.05em; color:var(--muted-2); padding:6px 11px; border-radius:999px; border:1px solid var(--border); background:var(--chip);">Faces</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ============ PROCESSING (Apple Intelligence style) ============ -->
+    <sc-if value="{{ stageAnalyzing }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="Processing" style="display:flex; flex-direction:column; align-items:center; gap:32px; animation:riseIn .5s ease both;">
+        <div style="position:relative; width:min(86vw,440px);">
+          <div style="position:absolute; inset:-24px; border-radius:34px; background:conic-gradient(from var(--aiA), #ff5e9c, #c06bff, #5b8cff, #34e0c7, #ffd23f, #ff7a45, #ff5e9c); filter:blur(28px); opacity:.85; animation:aiSpin 5.5s linear infinite; pointer-events:none;"></div>
+          <div style="position:absolute; inset:-5px; border-radius:24px; background:conic-gradient(from var(--aiA), #ff5e9c, #c06bff, #5b8cff, #34e0c7, #ffd23f, #ff7a45, #ff5e9c); filter:blur(7px); opacity:.75; animation:aiSpin 5.5s linear infinite reverse; pointer-events:none;"></div>
+          <div style="position:relative; aspect-ratio:{{ imgAspect }}; box-shadow:0 30px 70px rgba(0,0,0,.5); border-radius:18px; contain:paint; isolation:isolate;">
+            <sc-for list="{{ photoTiles }}" as="tile" hint-placeholder-count="0">
+              <div style="{{ tile.style }}"></div>
+            </sc-for>
+            <div style="position:absolute; inset:0; background:linear-gradient(115deg, transparent 32%, rgba(255,255,255,.5) 50%, transparent 68%); background-size:250% 100%; mix-blend-mode:overlay; animation:sheen 2.6s ease-in-out infinite; pointer-events:none;"></div>
+            <div style="position:absolute; inset:0; background:radial-gradient(circle at 50% 45%, rgba(255,255,255,.18), transparent 60%); animation:pulseSoft 2.4s ease-in-out infinite; pointer-events:none;"></div>
+            <sc-for list="{{ sparkles }}" as="sp" hint-placeholder-count="0">
+              <div style="{{ sp.style }}"></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:'Instrument Serif',Georgia,serif; font-size:clamp(24px,4vw,32px); background:linear-gradient(110deg,#ff5e9c,#c06bff,#5b8cff,#34e0c7,#ffd23f,#ff5e9c); background-size:300% auto; -webkit-background-clip:text; background-clip:text; color:transparent; animation:textShimmer 4s linear infinite;">Reading your photo…</div>
+          <div style="margin-top:10px; font-size:14px; color:var(--muted);">Looking for hidden location, device &amp; identity data</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ============ ANALYSIS (scanning + results) ============ -->
+    <sc-if value="{{ stageResults }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="Analysis" style="width:100%; max-width:1060px; margin:0 auto; animation:riseIn .5s ease both;">
+        <button onClick="{{ onReset }}" style="background:none; border:none; cursor:pointer; font-size:13px; color:var(--muted); padding:6px 0; font-family:'Newsreader',Georgia,serif; transition:color .2s;" style-hover="color:var(--ink);">← Scan a different photo</button>
+
+        <div style="display:flex; gap:30px; align-items:flex-start; margin-top:14px; flex-wrap:wrap;">
+          <!-- photo -->
+          <div style="flex:1 1 420px; min-width:320px; display:flex; justify-content:center;">
+            <div style="position:relative; width:100%; max-width:640px; border-radius:18px; overflow:hidden; box-shadow:0 34px 80px rgba(0,0,0,.55); border:1px solid var(--border);">
+              {{ analysisImg }}
+              <div style="position:absolute; inset:0; background:linear-gradient(transparent 60%, rgba(8,8,16,.3)); pointer-events:none;"></div>
+              <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(124,200,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(124,200,255,.05) 1px,transparent 1px); background-size:42px 42px; mix-blend-mode:screen; pointer-events:none;"></div>
+              <sc-for list="{{ faceBoxes }}" as="fb" hint-placeholder-count="0">
+                <div style="{{ fb.style }}"></div>
+              </sc-for>
+              <sc-for list="{{ pins }}" as="pin" hint-placeholder-count="0">
+                <div style="{{ pin.style }}">
+                  <span style="{{ pin.dotStyle }}"></span>
+                  <span style="{{ pin.tagStyle }}">{{ pin.tag }}</span>
+                  <span style="{{ pin.valStyle }}">{{ pin.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <!-- panel -->
+          <div style="flex:0 0 360px; max-width:360px; display:flex; flex-direction:column; gap:13px;">
+            <div style="display:flex; align-items:center; gap:8px; font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.16em; color:var(--teal);">
+              <span style="width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 8px var(--teal); animation:dotPulse 1.4s ease-in-out infinite;"></span>
+              {{ panelKicker }}
+            </div>
+            <h2 style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:28px; line-height:1.08; letter-spacing:0; margin:0;"><span style="text-decoration:underline; text-underline-offset:3px;">{{ panelCount }}</span>{{ panelTitleRest }}</h2>
+            <p style="margin:0; font-size:13.5px; line-height:1.5; color:var(--muted);">{{ panelSub }}</p>
+
+            <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
+              <sc-for list="{{ leakCards }}" as="card" hint-placeholder-count="0">
+                <div style="{{ card.style }}">
+                  <div style="{{ card.barStyle }}"></div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="{{ card.dotStyle }}"></span>
+                    <span style="{{ card.tagStyle }}">{{ card.tag }}</span>
+                    <span style="{{ card.sevStyle }}">{{ card.sevLabel }}</span>
+                  </div>
+                  <div style="margin-top:8px; font-family:'Newsreader',Georgia,serif; font-weight:500; font-size:14.5px;">{{ card.title }}</div>
+                  <div style="margin-top:3px; font-family:'Newsreader',Georgia,serif; font-size:12px; color:var(--ink); word-break:break-word;">{{ card.value }}</div>
+                  <div style="{{ card.placeWrapStyle }}"><span style="{{ card.placeDotStyle }}"></span><span style="{{ card.placeTextStyle }}">{{ card.place }}</span></div>
+                  <div style="margin-top:5px; font-size:12px; line-height:1.45; color:var(--muted-2);">{{ card.detail }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <sc-if value="{{ showCTA }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:6px;">
+                <button class="metal-btn inv-btn" onClick="{{ onClean }}" style="width:100%; border:none; cursor:pointer; padding:15px; border-radius:13px; background:var(--btn); color:var(--btn-ink); font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:15px;">{{ ctaLabel }}</button>
+                <div style="margin-top:9px; font-size:11.5px; line-height:1.4; color:var(--muted-2); text-align:center;">{{ ctaNote }}</div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+
+        <!-- ===== AI VISUAL SCAN (migrated feature) ===== -->
+        <div style="margin-top:30px; border-top:1px solid var(--border); padding-top:26px;">
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <span style="width:6px; height:6px; border-radius:50%; background:var(--violet); box-shadow:0 0 8px var(--violet);"></span>
+            <span style="font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.16em; color:var(--violet);">VISIBLE-IMAGE SCAN · AI</span>
+            <sc-if value="{{ vIsDemo }}" hint-placeholder-val="{{ false }}">
+              <span style="font-family:'Newsreader',Georgia,serif; font-size:9px; letter-spacing:.1em; color:var(--muted-2); border:1px solid var(--border); border-radius:999px; padding:2px 8px;">DEMO</span>
+            </sc-if>
+          </div>
+
+          <sc-if value="{{ vCollapsed }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top:16px; display:flex; gap:20px; align-items:center; flex-wrap:wrap; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px;">
+              <div style="flex:1 1 320px;">
+                <div style="font-family:'Instrument Serif',Georgia,serif; font-size:24px; line-height:1.1;">Metadata's gone. Now check the picture itself.</div>
+                <div style="margin-top:7px; font-size:13.5px; line-height:1.55; color:var(--muted);">An AI model looks for street signs, license plates, house numbers, reflections and landmarks that give away where you are — then lets you blur each one and download a redacted copy.</div>
+                <sc-if value="{{ showDemoNote }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:10px; font-size:12px; color:var(--muted-2);">This is a demo scan. <button onClick="{{ onGoPlans }}" style="background:none; border:none; padding:0; color:var(--gold); cursor:pointer; font-family:'Newsreader',Georgia,serif; font-size:12px; text-decoration:underline;">Upgrade</button> to scan for real.</div>
+                </sc-if>
+              </div>
+              <button onClick="{{ onRunVisual }}" style="flex:none; border:none; cursor:pointer; padding:14px 24px; border-radius:13px; background:var(--btn); color:var(--btn-ink); font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:15px; transition:transform .2s, opacity .2s;" style-hover="opacity:.9;">Run AI visual scan</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ vScanning }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:18px; text-align:center; padding:34px 0;">
+              <div style="font-family:'Instrument Serif',Georgia,serif; font-size:clamp(22px,4vw,30px); background:linear-gradient(110deg,#ff5e9c,#c06bff,#5b8cff,#34e0c7,#ffd23f,#ff5e9c); background-size:300% auto; -webkit-background-clip:text; background-clip:text; color:transparent; animation:textShimmer 4s linear infinite;">Scanning for what leaks…</div>
+              <div style="margin-top:8px; font-size:13.5px; color:var(--muted);">Analysing the image for visible privacy risks</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ vErrorState }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:16px; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; font-size:13.5px; color:#fb7185;">
+              {{ vError }}
+              <button onClick="{{ onRunVisual }}" style="margin-left:8px; background:none; border:none; color:var(--ink); cursor:pointer; font-family:'Newsreader',Georgia,serif; text-decoration:underline;">Try again</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ vResults }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:18px; display:flex; gap:30px; align-items:flex-start; flex-wrap:wrap;">
+              <div style="flex:1 1 420px; min-width:320px;">
+                <div style="position:relative; width:100%; border-radius:18px; overflow:hidden; border:1px solid var(--border); box-shadow:0 34px 80px rgba(0,0,0,.45);">
+                  <canvas id="ai-canvas" style="display:block; width:100%; height:auto;"></canvas>
+                  <sc-for list="{{ vBoxes }}" as="b" hint-placeholder-count="0">
+                    <div data-index="{{ b.index }}" onClick="{{ redactFinding }}" style="{{ b.boxStyle }}"><span style="{{ b.tagStyle }}">{{ b.label }}</span></div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="flex:0 0 360px; max-width:360px; display:flex; flex-direction:column; gap:13px;">
+                <div style="display:flex; align-items:center; gap:8px; font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.16em; color:var(--teal);">
+                  <span style="width:6px; height:6px; border-radius:50%; background:{{ vRiskDot }}; box-shadow:0 0 8px {{ vRiskDot }};"></span>
+                  EXPOSURE REPORT
+                </div>
+                <h3 style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:26px; line-height:1.08; margin:2px 0 0;">{{ vTitle }}</h3>
+                <sc-if value="{{ hasVSummary }}" hint-placeholder-val="{{ false }}">
+                  <p style="margin:0; font-size:13.5px; line-height:1.5; color:var(--muted);">{{ vSummary }}</p>
+                </sc-if>
+                <sc-if value="{{ vHasFindings }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.1em; color:var(--muted-2); text-transform:uppercase; margin-top:2px;">Visible vulnerabilities — click a box to blur</div>
+                  <div style="display:flex; flex-direction:column; gap:10px;">
+                    <sc-for list="{{ vCards }}" as="c" hint-placeholder-count="0">
+                      <div style="border-radius:14px; padding:12px 14px; position:relative; background:var(--card); border:1px solid var(--border);">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                          <span style="font-family:'Newsreader',Georgia,serif; font-size:10px; letter-spacing:.1em; color:{{ c.sevColor }};">{{ c.type }}</span>
+                          <span style="margin-left:auto; font-family:'Newsreader',Georgia,serif; font-size:9px; color:{{ c.sevColor }}; border:1px solid {{ c.sevColor }}55; padding:2px 7px; border-radius:6px;">{{ c.sevLabel }}</span>
+                        </div>
+                        <div style="margin-top:6px; font-size:13px; line-height:1.45; color:var(--muted);">{{ c.desc }}</div>
+                        <button data-index="{{ c.index }}" onClick="{{ redactFinding }}" style="{{ c.btnStyle }}">{{ c.btnLabel }}</button>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <div style="margin-top:6px; display:flex; flex-direction:column; gap:10px;">
+                  <button class="metal-btn inv-btn" onClick="{{ onDownloadStripped }}" style="width:100%; border:none; cursor:pointer; padding:14px; border-radius:13px; background:var(--btn); color:var(--btn-ink); font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:15px;">Download (metadata stripped) ↓</button>
+                  <sc-if value="{{ canDownloadRedacted }}" hint-placeholder-val="{{ false }}">
+                    <button class="metal-btn inv-btn" onClick="{{ onDownloadRedacted }}" style="width:100%; border:none; cursor:pointer; padding:14px; border-radius:13px; background:var(--grad); color:#0a0a12; font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:15px; box-shadow:0 14px 34px rgba(139,92,246,.35); transition:transform .2s;" style-hover="transform:translateY(-2px);">Download clean image (redacted) ↓</button>
+                  </sc-if>
+                  <sc-if value="{{ vLockedDownload }}" hint-placeholder-val="{{ true }}">
+                    <div style="border-radius:12px; padding:14px; text-align:center; background:var(--card); border:1px solid var(--border);">
+                      <div style="font-family:'Newsreader',Georgia,serif; font-size:13px; font-weight:600;">Redacted download is a paid feature</div>
+                      <div style="margin-top:4px; font-size:11.5px; color:var(--muted-2); line-height:1.4;">Redactions show on screen but aren't saved into the free download. Upgrade to export a fully redacted image.</div>
+                      <button onClick="{{ onGoPlans }}" style="margin-top:10px; background:none; border:none; color:var(--gold); cursor:pointer; font-family:'Newsreader',Georgia,serif; font-size:13px;">See plans →</button>
+                    </div>
+                  </sc-if>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ============ CLEANING ============ -->
+    <sc-if value="{{ stageCleaning }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="Cleaning" style="display:flex; flex-direction:column; align-items:center; gap:26px; animation:riseIn .4s ease both;">
+        <div style="display:flex; align-items:center; gap:8px; font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.18em; color:var(--pink);">
+          <span style="width:6px; height:6px; border-radius:50%; background:var(--pink); box-shadow:0 0 8px var(--pink); animation:dotPulse 1s ease-in-out infinite;"></span>
+          SCRUBBING METADATA
+        </div>
+        <div style="position:relative; width:100%; max-width:520px; border-radius:18px; overflow:hidden; box-shadow:0 34px 80px rgba(0,0,0,.55); border:1px solid rgba(255,255,255,.1);">
+          {{ cleaningImg }}
+          <div style="position:absolute; inset:0; background:var(--grad); mix-blend-mode:color; opacity:.25; animation:pulseSoft 2.4s ease-in-out infinite; pointer-events:none;"></div>
+          <div style="position:absolute; inset:0; background:linear-gradient(115deg, transparent 35%, rgba(255,255,255,.55) 50%, transparent 65%); background-size:280% 100%; mix-blend-mode:overlay; animation:sheen 1.9s linear infinite; pointer-events:none;"></div>
+          <div style="position:absolute; top:50%; left:50%; width:300px; height:300px; transform:translate(-50%,-50%); background:radial-gradient(circle, rgba(255,255,255,.35), transparent 65%); animation:pulseSoft 1.8s ease-in-out infinite; pointer-events:none;"></div>
+          <sc-for list="{{ cleaningChips }}" as="chip" hint-placeholder-count="0">
+            <div style="{{ chip.style }}">{{ chip.label }}</div>
+          </sc-for>
+          <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:66px; height:66px; pointer-events:none;">
+            <div style="position:absolute; inset:0; border-radius:50%; border:3px solid rgba(255,255,255,.16); border-top-color:var(--teal); animation:spin 1s linear infinite;"></div>
+            <div style="position:absolute; inset:11px; border-radius:50%; border:3px solid var(--border-strong); border-top-color:var(--pink); animation:spinRev 1.4s linear infinite;"></div>
+          </div>
+        </div>
+        <div style="font-family:'Newsreader',Georgia,serif; font-size:16px; color:var(--muted);">Removing location, device &amp; timestamp data…</div>
+      </div>
+    </sc-if>
+
+    <!-- ============ DONE ============ -->
+    <sc-if value="{{ stageDone }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="Protected" style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px; max-width:560px; animation:riseIn .5s ease both;">
+        <div style="display:inline-flex; align-items:center; gap:9px; padding:8px 16px; border-radius:999px; background:rgba(52,211,153,.12); border:1px solid rgba(52,211,153,.4); color:#34d399; font-family:'Newsreader',Georgia,serif; font-size:12px; letter-spacing:.1em;">
+          <span style="width:18px; height:18px; border-radius:50%; background:#34d399; color:#000000; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;">✓</span>
+          PROTECTED
+        </div>
+        <h2 style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:clamp(32px,4.4vw,48px); letter-spacing:-.01em; margin:14px 0 0;">Your photo is <span style="font-style:italic;">clean.</span></h2>
+        <p style="margin:10px 0 0; font-size:15px; line-height:1.55; color:var(--muted);">Every hidden tag has been stripped. This copy is safe to post anywhere — your original file is untouched.</p>
+
+        <div style="position:relative; margin-top:24px; width:100%; max-width:440px; border-radius:18px; overflow:hidden; box-shadow:0 30px 70px rgba(0,0,0,.5); border:1px solid rgba(52,211,153,.3);">
+          {{ doneImg }}
+          <div style="position:absolute; inset:0; box-shadow:inset 0 0 0 1px rgba(52,211,153,.25); pointer-events:none;"></div>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:20px;">
+          <sc-for list="{{ removedChips }}" as="rc" hint-placeholder-count="0">
+            <span style="display:inline-flex; align-items:center; gap:6px; font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.05em; color:var(--muted-2); padding:6px 11px; border-radius:999px; border:1px solid var(--border); background:var(--chip);">
+              <span style="color:#34d399;">✓</span> {{ rc.label }} removed
+            </span>
+          </sc-for>
+        </div>
+
+        <div style="display:flex; gap:12px; margin-top:28px; flex-wrap:wrap; justify-content:center;">
+          <button class="metal-btn inv-btn" onClick="{{ onDownload }}" style="border:none; cursor:pointer; padding:15px 26px; border-radius:13px; background:var(--grad); color:#0a0a12; font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:15px; box-shadow:0 14px 34px rgba(139,92,246,.4); transition:transform .2s, box-shadow .2s;" style-hover="transform:translateY(-2px); box-shadow:0 20px 44px rgba(139,92,246,.55);">Download clean photo ↓</button>
+          <button onClick="{{ onReset }}" style="cursor:pointer; padding:15px 24px; border-radius:13px; background:var(--card); border:1px solid var(--border-strong); color:var(--ink); font-family:'Newsreader',Georgia,serif; font-weight:500; font-size:15px; transition:background .2s;" style-hover="background:rgba(255,255,255,.1);">Scan another</button>
+        </div>
+      </div>
+    </sc-if>
+
+  </main>
+
+  <sc-if value="{{ stageIdle }}" hint-placeholder-val="{{ true }}">
+    <div style="width:100%;">
+
+      <!-- FEATURES -->
+      <section id="features" data-screen-label="Features" style="border-top:1px solid var(--border); padding:90px 24px;">
+        <div style="max-width:1080px; margin:0 auto;">
+          <div style="font-family:'Newsreader',Georgia,serif; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold);">Features</div>
+          <h2 style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:clamp(30px,4vw,46px); letter-spacing:-.01em; margin:10px 0 0; max-width:640px;">Everything that leaks, found and removed.</h2>
+          <p style="margin:14px 0 0; max-width:560px; font-size:15px; line-height:1.6; color:var(--muted);">Xyris reads the invisible data layer inside your photos and hands back a clean copy in one tap — without anything ever leaving your device.</p>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(232px,1fr)); gap:16px; margin-top:42px;">
+            <div class="gold-hover" style="border:0.5px solid var(--gold); border-radius:16px; padding:24px; background:var(--card);">
+              <div style="font-family:'Newsreader',Georgia,serif; font-size:13px; color:var(--gold); letter-spacing:.1em;">01</div>
+              <div style="margin-top:12px; font-family:'Instrument Serif',Georgia,serif; font-size:23px; line-height:1.15;">Reads the hidden layer</div>
+              <div style="margin-top:8px; font-size:13.5px; line-height:1.55; color:var(--muted);">Parses real EXIF — GPS coordinates, camera make &amp; model, timestamps and software tags.</div>
+            </div>
+            <div class="gold-hover" style="border:0.5px solid var(--gold); border-radius:16px; padding:24px; background:var(--card);">
+              <div style="font-family:'Newsreader',Georgia,serif; font-size:13px; color:var(--gold); letter-spacing:.1em;">02</div>
+              <div style="margin-top:12px; font-family:'Instrument Serif',Georgia,serif; font-size:23px; line-height:1.15;">One-tap clean</div>
+              <div style="margin-top:8px; font-size:13.5px; line-height:1.55; color:var(--muted);">Re-encodes a fresh copy with every trace of metadata stripped out, ready to share.</div>
+            </div>
+            <div class="gold-hover" style="border:0.5px solid var(--gold); border-radius:16px; padding:24px; background:var(--card);">
+              <div style="font-family:'Newsreader',Georgia,serif; font-size:13px; color:var(--gold); letter-spacing:.1em;">03</div>
+              <div style="margin-top:12px; font-family:'Instrument Serif',Georgia,serif; font-size:23px; line-height:1.15;">Fully on-device</div>
+              <div style="margin-top:8px; font-size:13.5px; line-height:1.55; color:var(--muted);">No uploads, no servers, no account. It works even with your Wi-Fi switched off.</div>
+            </div>
+            <div class="gold-hover" style="border:0.5px solid var(--gold); border-radius:16px; padding:24px; background:var(--card);">
+              <div style="font-family:'Newsreader',Georgia,serif; font-size:13px; color:var(--gold); letter-spacing:.1em;">04</div>
+              <div style="margin-top:12px; font-family:'Instrument Serif',Georgia,serif; font-size:23px; line-height:1.15;">See before you share</div>
+              <div style="margin-top:8px; font-size:13.5px; line-height:1.55; color:var(--muted);">A live scan shows you exactly what each photo reveals about where you've been.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRIVACY -->
+      <section id="privacy" data-screen-label="Privacy" style="border-top:1px solid var(--border); padding:90px 24px;">
+        <div style="max-width:1080px; margin:0 auto; display:flex; gap:54px; flex-wrap:wrap; align-items:flex-start;">
+          <div style="flex:1 1 380px;">
+            <div style="font-family:'Newsreader',Georgia,serif; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold);">Privacy</div>
+            <h2 style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:clamp(30px,4vw,46px); letter-spacing:-.01em; margin:10px 0 0;">Your photos never leave your device. Full stop.</h2>
+            <p style="margin:16px 0 0; font-size:15px; line-height:1.65; color:var(--muted);">Most "privacy" tools quietly send your images to a server. Xyris doesn't. Every byte is read, scanned and cleaned right here in your browser — so the one place your photo is safest is the only place it ever goes.</p>
+          </div>
+          <div style="flex:1 1 300px; display:flex; flex-direction:column; gap:14px;">
+            <div class="gold-hover" style="display:flex; gap:13px; align-items:flex-start; background:var(--card); border:0.5px solid var(--gold); border-radius:14px; padding:18px 20px;">
+              <span style="flex:none; margin-top:2px; width:18px; height:18px; border-radius:50%; background:var(--gold); color:#06060c; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">&check;</span>
+              <div><div style="font-family:'Instrument Serif',Georgia,serif; font-size:19px;">No uploads</div><div style="margin-top:3px; font-size:13.5px; line-height:1.5; color:var(--muted);">Your image bytes never touch a network.</div></div>
+            </div>
+            <div class="gold-hover" style="display:flex; gap:13px; align-items:flex-start; background:var(--card); border:0.5px solid var(--gold); border-radius:14px; padding:18px 20px;">
+              <span style="flex:none; margin-top:2px; width:18px; height:18px; border-radius:50%; background:var(--gold); color:#06060c; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">&check;</span>
+              <div><div style="font-family:'Instrument Serif',Georgia,serif; font-size:19px;">No tracking</div><div style="margin-top:3px; font-size:13.5px; line-height:1.5; color:var(--muted);">No analytics, no cookies, no account.</div></div>
+            </div>
+            <div class="gold-hover" style="display:flex; gap:13px; align-items:flex-start; background:var(--card); border:0.5px solid var(--gold); border-radius:14px; padding:18px 20px;">
+              <span style="flex:none; margin-top:2px; width:18px; height:18px; border-radius:50%; background:var(--gold); color:#06060c; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">&check;</span>
+              <div><div style="font-family:'Instrument Serif',Georgia,serif; font-size:19px;">No lock-in</div><div style="margin-top:3px; font-size:13.5px; line-height:1.5; color:var(--muted);">Your original file is never modified.</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRICING -->
+      <section id="pricing" data-screen-label="Pricing" style="border-top:1px solid var(--border); padding:90px 24px;">
+        <div style="max-width:1080px; margin:0 auto;">
+          <div style="font-family:'Newsreader',Georgia,serif; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); text-align:center;">Pricing</div>
+          <h2 style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:clamp(30px,4vw,46px); letter-spacing:-.01em; margin:10px 0 0; text-align:center;">Free to clean. Pay only to see deeper.</h2>
+          <p style="max-width:600px; margin:14px auto 0; text-align:center; font-size:15px; line-height:1.6; color:var(--muted);">Metadata removal is always free and runs on your device. The AI visual scan runs on a small credit top-up — pay only when you use it.</p>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; margin-top:40px; align-items:stretch; max-width:760px; margin-left:auto; margin-right:auto;">
+
+            <div style="position:relative; background:var(--card); border:1px solid var(--border); border-radius:20px; padding:30px; display:flex; flex-direction:column;">
+              <div style="font-family:'Newsreader',Georgia,serif; font-size:21px; letter-spacing:.1em; text-align:center; color:#22d3ee;">Aegis</div>
+              <div style="margin-top:10px; display:flex; align-items:baseline; gap:6px;"><span style="font-family:'Instrument Serif',Georgia,serif; font-size:48px; line-height:1;">$0</span><span style="font-size:14px; color:var(--muted);">forever</span></div>
+              <div style="margin-top:22px; display:flex; flex-direction:column; gap:11px; font-size:14px; color:var(--muted);">
+                <div style="display:flex; gap:9px;"><span style="color:var(--gold);">&check;</span> Unlimited on-device metadata removal</div>
+                <div style="display:flex; gap:9px;"><span style="color:var(--gold);">&check;</span> GPS, camera, timestamp &amp; software stripping</div>
+                <div style="display:flex; gap:9px;"><span style="color:var(--gold);">&check;</span> AI exposure report with red highlight boxes</div>
+                <div style="display:flex; gap:9px;"><span style="color:var(--gold);">&check;</span> Download the metadata-stripped image</div>
+                <div style="display:flex; gap:9px;"><span style="color:var(--gold);">&check;</span> No card required, No sign in required</div>
+              </div>
+              <a href="#top" onClick="{{ onNavClick }}" style="display:block; text-align:center; text-decoration:none; margin-top:auto; padding-top:26px;"><span class="metal-btn inv-btn" style="display:block; padding:13px; border-radius:12px; background:var(--btn); color:var(--btn-ink); font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:14.5px;">Clean a photo</span></a>
+            </div>
+
+            <div style="position:relative; background:var(--card); border:1px solid var(--gold); border-radius:20px; padding:30px; display:flex; flex-direction:column;">
+              <div style="font-family:'Newsreader',Georgia,serif; font-size:21px; letter-spacing:.1em; text-align:center; color:#d6249f;">Eclipse</div>
+              <div style="margin-top:10px; display:flex; align-items:baseline; gap:6px;"><span style="font-family:'Instrument Serif',Georgia,serif; font-size:48px; line-height:1;">$10</span><span style="font-size:14px; color:var(--muted);">For Maximum shielding and extended usage</span></div>
+              <div style="margin-top:22px; display:flex; flex-direction:column; gap:11px; font-size:14px; color:var(--muted);">
+                <div style="display:flex; gap:9px;"><span style="color:var(--gold);">&check;</span> Everything in Aegis</div>
+                <div style="display:flex; gap:9px;"><span style="color:var(--gold);">&check;</span> Download fully redacted images</div>
+                <div style="display:flex; gap:9px;"><span style="color:var(--gold);">&check;</span> Flagship Claude Opus vision model</div>
+                <div style="display:flex; gap:9px;"><span style="color:var(--gold);">&check;</span> Saved scan history</div>
+                <div style="display:flex; gap:9px;"><span style="color:var(--gold);">&check;</span> No subscription — pay only when you scan</div>
+              </div>
+              <div style="margin-top:auto; padding-top:24px;">
+                <div style="padding:2px; border-radius:14px; background:conic-gradient(from var(--irisA) at 50% 50%, transparent 0deg, #2dffcf 13deg, #2dffcf 17deg, transparent 21deg, transparent 60deg, #38b6ff 73deg, #38b6ff 77deg, transparent 81deg, transparent 130deg, #9b6bff 143deg, #9b6bff 147deg, transparent 151deg, transparent 196deg, #ff5fd0 209deg, #ff5fd0 213deg, transparent 217deg, transparent 262deg, #ffb13d 275deg, #ffb13d 279deg, transparent 283deg, transparent 320deg, #4dff9e 332deg, #4dff9e 336deg, transparent 340deg, transparent 360deg), conic-gradient(from var(--chromeA) at 50% 50%, #ffffff 0deg, #c4cbd4 7deg, #474d57 18deg, #14161c 28deg, #b0b7c0 42deg, #ffffff 52deg, #565c66 64deg, #1a1d24 76deg, #cdd3db 90deg, #ffffff 100deg, #3c414b 116deg, #101218 130deg, #9aa1aa 148deg, #ffffff 160deg, #4a505a 174deg, #14161c 186deg, #c4cbd4 202deg, #ffffff 214deg, #50565f 230deg, #16181e 244deg, #b0b7c0 262deg, #ffffff 276deg, #3c414b 292deg, #101218 306deg, #aab1ba 326deg, #ffffff 344deg, #ffffff 360deg); background-size:100% 100%, 100% 100%; background-blend-mode:normal, normal; animation:irisSpin 15s linear infinite, chromeSpin 24s linear infinite; box-shadow:inset 0 1px 1px rgba(255,255,255,.65); transition:filter .25s, box-shadow .25s;" style-hover="filter:brightness(1.08); box-shadow:inset 0 1px 1px rgba(255,255,255,.7);">
+                  <button class="inv-btn" onClick="{{ onAddCredits }}" style="display:block; width:100%; border:none; cursor:pointer; padding:13px; border-radius:12px; background:var(--btn); color:var(--btn-ink); font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:14.5px;">Upgrade — $10.00</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <sc-if value="{{ hasPlanNote }}" hint-placeholder-val="{{ false }}">
+            <div style="max-width:1080px; margin:18px auto 0; text-align:center; font-size:13px; color:{{ planNoteColor }};">{{ planNoteText }}</div>
+          </sc-if>
+
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq" data-screen-label="FAQ" style="border-top:1px solid var(--border); padding:90px 24px 110px;">
+        <div style="max-width:760px; margin:0 auto;">
+          <div style="font-family:'Newsreader',Georgia,serif; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold);">FAQ</div>
+          <h2 style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:clamp(30px,4vw,46px); letter-spacing:-.01em; margin:10px 0 30px;">Questions, answered.</h2>
+          <details style="border-top:1px solid var(--border); padding:18px 0;">
+            <summary style="display:flex; align-items:center; justify-content:space-between; gap:16px; font-family:'Instrument Serif',Georgia,serif; font-size:21px;">Do my photos get uploaded anywhere?<span class="faq-ic" style="flex:none; font-size:22px; color:var(--gold);">+</span></summary>
+            <p style="margin:12px 0 0; font-size:14.5px; line-height:1.6; color:var(--muted);">No. Everything runs locally in your browser — your photos never leave your device, on Aegis or Eclipse.</p>
+          </details>
+          <details style="border-top:1px solid var(--border); padding:18px 0;">
+            <summary style="display:flex; align-items:center; justify-content:space-between; gap:16px; font-family:'Instrument Serif',Georgia,serif; font-size:21px;">What exactly does Xyris remove?<span class="faq-ic" style="flex:none; font-size:22px; color:var(--gold);">+</span></summary>
+            <p style="margin:12px 0 0; font-size:14.5px; line-height:1.6; color:var(--muted);">GPS coordinates, camera make &amp; model, the capture date &amp; time, and software / OS tags embedded in the file. In the Pro Plan, it can also help you find further vulnerabilities in your photo which potential hackers can exploit to breach your information. Xyris Vision prevents this by giving you an option to modify certain parts of the image so that your data stays safe.</p>
+          </details>
+          <details style="border-top:1px solid var(--border); padding:18px 0;">
+            <summary style="display:flex; align-items:center; justify-content:space-between; gap:16px; font-family:'Instrument Serif',Georgia,serif; font-size:21px;">Will cleaning change how my photo looks?<span class="faq-ic" style="flex:none; font-size:22px; color:var(--gold);">+</span></summary>
+            <p style="margin:12px 0 0; font-size:14.5px; line-height:1.6; color:var(--muted);">No. The pixels stay the same — Xyris just re-saves the image without the hidden data attached.</p>
+          </details>
+          <details style="border-top:1px solid var(--border); padding:18px 0;">
+            <summary style="display:flex; align-items:center; justify-content:space-between; gap:16px; font-family:'Instrument Serif',Georgia,serif; font-size:21px;">Which file types are supported?<span class="faq-ic" style="flex:none; font-size:22px; color:var(--gold);">+</span></summary>
+            <p style="margin:12px 0 0; font-size:14.5px; line-height:1.6; color:var(--muted);">Any common image format — JPEG, PNG, WebP, GIF, BMP and more. Your cleaned copy is re-encoded in the same format wherever your browser supports it.</p>
+          </details>
+          <details style="border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:18px 0;">
+            <summary style="display:flex; align-items:center; justify-content:space-between; gap:16px; font-family:'Instrument Serif',Georgia,serif; font-size:21px;">Is my original file modified?<span class="faq-ic" style="flex:none; font-size:22px; color:var(--gold);">+</span></summary>
+            <p style="margin:12px 0 0; font-size:14.5px; line-height:1.6; color:var(--muted);">Never. You download a clean copy; your original stays exactly as it was.</p>
+          </details>
+        </div>
+      </section>
+
+    </div>
+  </sc-if>
+
+  <!-- ===== PLANS / SETTINGS MODAL (migrated) ===== -->
+  <sc-if value="{{ plansOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ onClosePlans }}" style="position:fixed; inset:0; z-index:60; background:rgba(0,0,0,.62); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); display:flex; align-items:flex-start; justify-content:center; padding:40px 18px; overflow:auto;">
+      <div onClick="{{ onStop }}" style="width:100%; max-width:980px; background:var(--surface); border:1px solid var(--border-strong); border-radius:22px; padding:28px; box-shadow:0 40px 100px rgba(0,0,0,.6);">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <button onClick="{{ onShowAccount }}" style="background:none; border:none; cursor:pointer; font-family:'Instrument Serif',Georgia,serif; font-size:24px; color:{{ tabAccountColor }}; padding:0; transition:color .2s;">Account</button>
+          <span style="color:var(--muted-2); font-family:'Instrument Serif',Georgia,serif; font-size:22px;">·</span>
+          <button onClick="{{ onShowBilling }}" style="background:none; border:none; cursor:pointer; font-family:'Instrument Serif',Georgia,serif; font-size:24px; color:{{ tabBillingColor }}; padding:0; transition:color .2s;">Billing</button>
+          <span style="color:var(--muted-2); font-family:'Instrument Serif',Georgia,serif; font-size:22px;">·</span>
+          <button onClick="{{ onOpenHistory }}" style="background:none; border:none; cursor:pointer; font-family:'Instrument Serif',Georgia,serif; font-size:24px; color:{{ tabHistoryColor }}; padding:0; transition:color .2s;">History</button>
+          <div style="margin-left:auto; display:flex; align-items:center; gap:12px;">
+            <sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px; color:var(--muted);">{{ email }}</span></sc-if>
+            <button onClick="{{ onClosePlans }}" aria-label="Close" style="width:34px; height:34px; border-radius:50%; background:var(--card); border:1px solid var(--border); color:var(--ink); cursor:pointer; font-size:15px; line-height:1;">✕</button>
+          </div>
+        </div>
+
+        <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:14px; border-radius:12px; padding:12px 16px; font-size:14px; background:var(--card); border:1px solid {{ toastBorder }}; color:var(--ink);">{{ toast }}</div>
+        </sc-if>
+        <sc-if value="{{ hasPlanNote }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:14px; font-size:13px; color:{{ planNoteColor }};">{{ planNoteText }}</div>
+        </sc-if>
+
+        <sc-if value="{{ accountView }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:18px; display:flex; flex-direction:column; gap:14px;">
+            <div style="display:flex; align-items:center; gap:14px; border-radius:16px; padding:20px; background:var(--card); border:1px solid var(--border);">
+              <div style="width:48px; height:48px; flex:none; border-radius:50%; background:#ffffff; display:flex; align-items:center; justify-content:center; color:#000000; font-family:'Instrument Serif',Georgia,serif; font-size:22px;">{{ accountInitial }}</div>
+              <div style="min-width:0;">
+                <div style="font-family:'Instrument Serif',Georgia,serif; font-size:20px; overflow:hidden; text-overflow:ellipsis;">{{ accountEmail }}</div>
+                <div style="font-size:13px; color:var(--muted);">{{ accountPlan }} plan</div>
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px;">
+              <div style="border-radius:14px; padding:18px; background:var(--card); border:1px solid var(--border);">
+                <div style="font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">Plan</div>
+                <div style="font-family:'Instrument Serif',Georgia,serif; font-size:24px; margin-top:4px;">{{ accountPlan }}</div>
+              </div>
+              <sc-if value="{{ accountShowCredits }}" hint-placeholder-val="{{ false }}">
+                <div style="border-radius:14px; padding:18px; background:var(--card); border:1px solid var(--border);">
+                  <div style="font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">Credits</div>
+                  <div style="font-family:'Instrument Serif',Georgia,serif; font-size:24px; margin-top:4px; color:{{ balanceColor }};">{{ balanceText }}</div>
+                </div>
+              </sc-if>
+            </div>
+            <sc-if value="{{ accountSignedIn }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ onSignOut }}" style="cursor:pointer; padding:12px; border-radius:12px; background:var(--card); border:1px solid var(--border-strong); color:var(--ink); font-family:'Newsreader',Georgia,serif; font-size:14px;">Sign out</button>
+            </sc-if>
+            <sc-if value="{{ accountNotSignedIn }}" hint-placeholder-val="{{ true }}">
+              <button class="metal-btn inv-btn" onClick="{{ onOpenAuth }}" style="cursor:pointer; padding:13px; border-radius:12px; background:var(--grad); border:none; color:#0a0a12; font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:14.5px;">Sign in / Create account</button>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ billingView }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:18px; display:flex; flex-direction:column; gap:16px;">
+            <div style="border-radius:16px; padding:22px 24px; background:var(--card); border:1px solid var(--border); display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap; align-items:baseline;">
+              <div>
+                <div style="font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">Current tier</div>
+                <div style="font-family:'Instrument Serif',Georgia,serif; font-size:30px; line-height:1.1;">{{ tierLabel }}</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);">Scanning credits</div>
+                <div style="font-family:'Instrument Serif',Georgia,serif; font-size:30px; line-height:1.1; color:{{ balanceColor }};">{{ balanceText }}</div>
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;">
+              <div style="border-radius:16px; padding:22px; background:var(--card); border:1px solid var(--border);">
+                <div style="font-family:'Instrument Serif',Georgia,serif; font-size:20px;">Aegis</div>
+                <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px; font-size:13.5px; color:var(--muted);">
+                  <div>Removes hidden metadata (GPS, device, time)</div>
+                  <div>Runs entirely on your device</div>
+                  <div>AI exposure report + red highlights</div>
+                  <div>Unlimited, always free</div>
+                </div>
+              </div>
+              <div style="border-radius:16px; padding:22px; background:var(--card); border:1px solid var(--border);">
+                <div style="font-family:'Instrument Serif',Georgia,serif; font-size:20px;">Eclipse — $10.00</div>
+                <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px; font-size:13.5px; color:var(--muted);">
+                  <div>Download fully redacted images</div>
+                  <div>Flagship Claude Opus vision model</div>
+                  <div>Saved scan history</div>
+                  <div>Credits last until spent — no expiry</div>
+                </div>
+                <button class="metal-btn inv-btn" onClick="{{ onAddCredits }}" style="margin-top:16px; width:100%; border:none; cursor:pointer; padding:13px; border-radius:12px; background:var(--grad); color:#0a0a12; font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:14.5px;">Add Credits — $10.00</button>
+              </div>
+            </div>
+            <div style="border-radius:16px; padding:20px 22px; background:var(--card); border:1px solid var(--border);">
+              <div style="font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted-2);">Model pricing reference</div>
+              <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px;">
+                <sc-for list="{{ costHints }}" as="h" hint-placeholder-count="0">
+                  <div style="display:flex; align-items:center; gap:9px; font-size:13.5px;">
+                    <span style="width:7px; height:7px; border-radius:50%; background:{{ h.dot }}; flex:none;"></span>
+                    <span>{{ h.label }}</span>
+                    <span style="margin-left:auto; color:var(--muted);">{{ h.perScan }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ historyView }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:14px 0 14px; font-size:13.5px; color:var(--muted);">Saved scans from your AI vulnerability checks. We log the model, risk and time — never the image.</p>
+          <sc-if value="{{ hasHistory }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <sc-for list="{{ histRows }}" as="r" hint-placeholder-count="0">
+                <div style="display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; background:var(--card); border:1px solid var(--border); font-size:13px; flex-wrap:wrap;">
+                  <span style="color:var(--muted-2); min-width:150px;">{{ r.when }}</span>
+                  <span style="font-family:'Newsreader',Georgia,serif;">{{ r.model }}</span>
+                  <span style="margin-left:auto; color:var(--muted);">risk: {{ r.risk }}</span>
+                  <span style="color:var(--muted-2);">{{ r.findings }} found</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ noHistory }}" hint-placeholder-val="{{ true }}">
+            <div style="border-radius:14px; padding:28px; text-align:center; background:var(--card); border:1px solid var(--border); color:var(--muted); font-size:14px;">No scans yet. Run an AI visual scan to start building history.</div>
+          </sc-if>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===== BATCH CLEAN + ZIP MODAL ===== -->
+  <sc-if value="{{ batchOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ onCloseBatch }}" style="position:fixed; inset:0; z-index:66; background:rgba(0,0,0,.62); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); display:flex; align-items:flex-start; justify-content:center; padding:40px 18px; overflow:auto;">
+      <div onClick="{{ onStop }}" style="width:100%; max-width:880px; background:var(--surface); border:1px solid var(--border-strong); border-radius:22px; padding:28px; box-shadow:0 40px 100px rgba(0,0,0,.6);">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="font-family:'Instrument Serif',Georgia,serif; font-size:24px;">Batch clean</div>
+          <span style="font-size:13px; color:var(--muted);">{{ batchCountLabel }}</span>
+          <button onClick="{{ onCloseBatch }}" aria-label="Close" style="margin-left:auto; width:34px; height:34px; border-radius:50%; background:var(--card); border:1px solid var(--border); color:var(--ink); cursor:pointer; font-size:15px;">✕</button>
+        </div>
+        <p style="margin:8px 0 0; font-size:13.5px; color:var(--muted);">Metadata is stripped from every photo on your device. Download them all as a single zip.</p>
+        <sc-if value="{{ hasBatch }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:18px; display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:12px;">
+            <sc-for list="{{ batchCards }}" as="b" hint-placeholder-count="0">
+              <div style="position:relative; border-radius:12px; overflow:hidden; border:1px solid var(--border); background:var(--card);">
+                <div style="{{ b.thumbStyle }}"></div>
+                <button data-index="{{ b.index }}" onClick="{{ onRemoveBatch }}" aria-label="Remove" style="position:absolute; top:6px; right:6px; width:22px; height:22px; border-radius:50%; background:rgba(8,8,16,.72); border:none; color:#fff; cursor:pointer; font-size:11px; line-height:1;">✕</button>
+                <div style="padding:7px 9px; font-size:11px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ b.name }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ batchBusy }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:16px; font-size:13.5px; color:var(--muted);">Processing…</div>
+        </sc-if>
+        <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="metal-btn inv-btn" onClick="{{ onDownloadZip }}" style="border:none; cursor:pointer; padding:13px 22px; border-radius:12px; background:var(--grad); color:#0a0a12; font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:14.5px;">Download all (.zip) ↓</button>
+          <button onClick="{{ onAddMoreBatch }}" style="cursor:pointer; padding:13px 20px; border-radius:12px; background:var(--card); border:1px solid var(--border-strong); color:var(--ink); font-family:'Newsreader',Georgia,serif; font-size:14.5px;">Add more</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===== AUTH / SIGN-IN MODAL ===== -->
+  <sc-if value="{{ authOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ onCloseAuth }}" style="position:fixed; inset:0; z-index:75; background:rgba(0,0,0,.62); -webkit-backdrop-filter:blur(5px); backdrop-filter:blur(5px); display:flex; align-items:center; justify-content:center; padding:24px;">
+      <div onClick="{{ onStop }}" style="max-width:400px; width:100%; background:var(--surface); border:1px solid var(--border-strong); border-radius:18px; padding:30px; text-align:center; box-shadow:0 40px 100px rgba(0,0,0,.6);">
+        <h3 style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:25px; margin:0;">Create your Xyris account</h3>
+        <p style="margin:10px 0 0; font-size:14px; line-height:1.5; color:var(--muted);">Needed to run the AI scan and manage your Eclipse plan. Your photos are never uploaded.</p>
+        <div style="margin-top:22px; display:flex; flex-direction:column; gap:10px;">
+          <button onClick="{{ onSignInGoogle }}" style="display:flex; align-items:center; justify-content:center; gap:11px; cursor:pointer; padding:13px; border-radius:12px; background:var(--btn); color:var(--btn-ink); border:none; font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:14.5px;"><span style="width:20px; height:20px; border-radius:50%; background:#fff; border:1px solid rgba(0,0,0,.15); color:#4285F4; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px;">G</span> Continue with Google</button>
+        </div>
+        <button onClick="{{ onCloseAuth }}" style="margin-top:14px; cursor:pointer; background:none; border:none; color:var(--muted); font-family:'Newsreader',Georgia,serif; font-size:13px;">Maybe later</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===== CREDITS-EXHAUSTED MODAL (migrated) ===== -->
+  <sc-if value="{{ creditsOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ onCloseCredits }}" style="position:fixed; inset:0; z-index:70; background:rgba(0,0,0,.6); -webkit-backdrop-filter:blur(5px); backdrop-filter:blur(5px); display:flex; align-items:center; justify-content:center; padding:24px;">
+      <div onClick="{{ onStop }}" style="max-width:440px; width:100%; background:var(--surface); border:1px solid var(--border-strong); border-radius:18px; padding:30px; text-align:center; box-shadow:0 40px 100px rgba(0,0,0,.6);">
+        <div style="width:46px; height:46px; margin:0 auto; border-radius:50%; background:rgba(251,191,36,.14); border:1px solid rgba(251,191,36,.4); display:flex; align-items:center; justify-content:center; color:#fbbf24; font-family:'Instrument Serif',Georgia,serif; font-size:24px;">!</div>
+        <h3 style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:25px; margin:14px 0 0;">This scan needs credits.</h3>
+        <p style="margin:12px 0 0; font-size:14px; line-height:1.55; color:var(--muted);">Your Aegis plan still removes hidden metadata on-device. To run the AI visual scan on a paid model, top up credits.</p>
+        <div style="margin-top:22px; display:flex; flex-direction:column; gap:10px;">
+          <button class="metal-btn inv-btn" onClick="{{ onAddCredits }}" style="border:none; cursor:pointer; padding:14px; border-radius:12px; background:var(--grad); color:#0a0a12; font-family:'Newsreader',Georgia,serif; font-weight:600; font-size:15px;">Add Credits — $10.00</button>
+          <button onClick="{{ onCloseCredits }}" style="cursor:pointer; padding:10px; border-radius:12px; background:none; border:none; color:var(--muted); font-family:'Newsreader',Georgia,serif; font-size:13.5px;">Continue with Aegis plan</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 1200, &quot;height&quot;: 820 },
+  &quot;palette&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;Aurora&quot;, &quot;options&quot;: [&quot;Aurora&quot;, &quot;Neon&quot;, &quot;Sunset&quot;, &quot;Violet haze&quot;], &quot;tsType&quot;: &quot;string&quot; },
+  &quot;grain&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot; }
+}">
+class Component extends DCLogic {
+  state = {
+    stage: 'idle', dragOver: false, error: '', fileName: '', file: null,
+    originalUrl: null, cleanUrl: null, cleanType: 'image/jpeg',
+    leaks: [], faceBoxes: [], reveal: false, imgAspect: '4 / 3', theme: 'dark',
+    // ── migrated features: AI visual scan · plans/credits · history ──
+    chosenModel: 'anthropic/claude-opus-4.8-fast',
+    tier: 'free', balance: 0, isAdmin: false, history: [],
+    plansOpen: false, creditsOpen: false, historyView: false, planNote: '',
+    modalTab: 'billing', toast: '', toastErr: false,
+    signedIn: false, email: null, authOpen: false,
+    vStage: 'collapsed', vError: '', vFindings: [], vReport: null, vReveal: false, vDemo: false,
+    batchOpen: false, batchItems: [], batchBusy: false,
+  };
+
+  componentDidMount() {
+    this.applyPalette();
+    let t = 'dark';
+    try { t = localStorage.getItem('veil-theme') || 'dark'; } catch (e) {}
+    this.setState({ theme: t });
+    this.applyTheme(t);
+    this.loadFeatureState();
+    this.handleCheckoutReturn();
+    this._onScroll = () => {
+      const s = window.scrollY > 24;
+      if (s !== this._scrolled) {
+        this._scrolled = s;
+        const r = document.documentElement.style;
+        r.setProperty('--header-bg', s ? 'var(--header-bg-scrolled)' : 'transparent');
+        r.setProperty('--header-blur', s ? 'blur(16px) saturate(1.5)' : 'none');
+        r.setProperty('--header-border', s ? 'var(--border)' : 'transparent');
+      }
+      let active = '';
+      for (const id of ['features', 'privacy', 'pricing', 'faq']) {
+        const el = document.getElementById(id);
+        if (el) { const rc = el.getBoundingClientRect(); if (rc.top <= 150 && rc.bottom > 150) active = id; }
+      }
+      if (active !== this._activeNav) {
+        this._activeNav = active;
+        const links = [...document.querySelectorAll('header nav a')];
+        links.forEach((a) => {
+          const id = (a.getAttribute('href') || '').replace('#', '');
+          a.style.color = (id === active) ? 'var(--gold)' : 'var(--muted)';
+        });
+        const ul = document.getElementById('nav-underline');
+        if (ul) {
+          const link = links.find((a) => (a.getAttribute('href') || '').replace('#', '') === active);
+          if (link) { ul.style.left = link.offsetLeft + 'px'; ul.style.width = link.offsetWidth + 'px'; ul.style.opacity = '1'; }
+          else { ul.style.opacity = '0'; }
+        }
+      }
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    this._onScroll();
+  }
+
+  onNavClick = (e) => {
+    e.preventDefault();
+    const id = (e.currentTarget.getAttribute('href') || '').replace('#', '');
+    const el = document.getElementById(id);
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 68, behavior: 'smooth' });
+  };
+
+  onLogoClick = (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); const el = document.getElementById('brand-logo'); if (el) { el.classList.remove('logo-blink'); void el.offsetWidth; el.classList.add('logo-blink'); } };
+
+  applyTheme(t) {
+    const themes = {
+      dark: { '--bg': '#000000', '--surface': '#0c0c12', '--card': 'rgba(255,255,255,.045)', '--card-hover': 'rgba(255,255,255,.07)', '--border': 'rgba(255,255,255,.09)', '--border-strong': 'rgba(255,255,255,.14)', '--chip': 'rgba(255,255,255,.03)', '--ink': '#f4f3fb', '--muted': 'rgba(244,243,251,.62)', '--muted-2': 'rgba(244,243,251,.46)', '--btn': '#ffffff', '--btn-ink': '#000000', '--header-bg-scrolled': 'rgba(8,8,12,.62)', '--gold': '#dcb43c' },
+      light: { '--bg': '#f1f1ee', '--surface': '#ffffff', '--card': 'rgba(0,0,0,.04)', '--card-hover': 'rgba(0,0,0,.07)', '--border': 'rgba(0,0,0,.1)', '--border-strong': 'rgba(0,0,0,.16)', '--chip': 'rgba(0,0,0,.03)', '--ink': '#16181d', '--muted': 'rgba(22,24,29,.64)', '--muted-2': 'rgba(22,24,29,.5)', '--btn': '#000000', '--btn-ink': '#ffffff', '--header-bg-scrolled': 'rgba(241,241,238,.72)', '--gold': '#cfa63c' },
+    };
+    const vars = themes[t] || themes.dark;
+    const targets = [document.documentElement, document.body];
+    for (const el of targets) { if (el) for (const k in vars) el.style.setProperty(k, vars[k]); }
+    document.documentElement.setAttribute('data-theme', t);
+    const lbl = document.getElementById('theme-label');
+    if (lbl) lbl.textContent = t === 'light' ? 'Lumen' : 'Umbra';
+  }
+
+  onToggleTheme = () => {
+    const t = this.state.theme === 'light' ? 'dark' : 'light';
+    const apply = () => {
+      this.setState({ theme: t });
+      this.applyTheme(t);
+      try { localStorage.setItem('veil-theme', t); } catch (e) {}
+    };
+    if (document.startViewTransition) { document.startViewTransition(apply); }
+    else { apply(); }
+  };
+
+  onCardMove = (e) => {
+    const el = e.currentTarget;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    const rx = (0.5 - py) * 8;
+    const ry = (px - 0.5) * 8;
+    el.style.transform = `perspective(900px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+  };
+
+  onCardLeave = (e) => {
+    e.currentTarget.style.transform = '';
+  };
+  componentDidUpdate(prev) { if (prev.palette !== this.props.palette) this.applyPalette(); }
+  componentWillUnmount() {
+    if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+    clearTimeout(this._t1); clearTimeout(this._t2);
+    this.revoke(this.state.originalUrl); this.revoke(this.state.cleanUrl);
+  }
+
+  revoke(u) { if (u) { try { URL.revokeObjectURL(u); } catch (e) {} } }
+  extFor(type) { if (type === 'image/png') return 'png'; if (type === 'image/webp') return 'webp'; if (type === 'image/jpeg') return 'jpg'; return (type && type.indexOf('image/') === 0) ? type.slice(6).replace('+xml', '') : 'jpg'; }
+
+  applyPalette() {
+    const map = {
+      Aurora: ['#2dd4bf', '#8b5cf6', '#f472b6'],
+      Neon: ['#22d3ee', '#a855f7', '#60a5fa'],
+      Sunset: ['#fbbf24', '#fb7185', '#c084fc'],
+      'Violet haze': ['#c4b5fd', '#8b5cf6', '#a78bfa'],
+    };
+    const [a, b, c] = map[this.props.palette] || map.Aurora;
+    const r = document.documentElement.style;
+    r.setProperty('--teal', a); r.setProperty('--violet', b); r.setProperty('--pink', c);
+  }
+
+  // Inlined EXIF parser / stripper / sample-generator — no external module, works from file://.
+  getMod() {
+    if (this._mod) return this._mod;
+    const TYPE_SIZE = { 1: 1, 2: 1, 3: 2, 4: 4, 5: 8, 7: 1, 9: 4, 10: 8 };
+
+    function parseJpegExif(buffer) {
+      const view = new DataView(buffer);
+      if (view.byteLength < 4 || view.getUint16(0) !== 0xffd8) return { isJpeg: false, tags: {} };
+      let offset = 2;
+      const len = view.byteLength;
+      while (offset + 4 <= len) {
+        if (view.getUint8(offset) !== 0xff) break;
+        const marker = view.getUint8(offset + 1);
+        if (marker === 0xda || marker === 0xd9) break;
+        const size = view.getUint16(offset + 2);
+        if (marker === 0xe1 && view.getUint32(offset + 4) === 0x45786966) return parseTiff(view, offset + 10);
+        offset += 2 + size;
+      }
+      return { isJpeg: true, tags: {} };
+    }
+    function parseTiff(view, tiffStart) {
+      const little = view.getUint16(tiffStart) === 0x4949;
+      const tags = {};
+      const firstIFD = view.getUint32(tiffStart + 4, little);
+      readIFD(view, tiffStart, tiffStart + firstIFD, little, tags, 'ifd0');
+      return { isJpeg: true, tags, tiffStart };
+    }
+    function readIFD(view, tiffStart, dirStart, little, tags, which) {
+      const get16 = (o) => view.getUint16(o, little);
+      const get32 = (o) => view.getUint32(o, little);
+      if (dirStart + 2 > view.byteLength) return;
+      const entries = get16(dirStart);
+      for (let i = 0; i < entries; i++) {
+        const entry = dirStart + 2 + i * 12;
+        if (entry + 12 > view.byteLength) break;
+        const tag = get16(entry), type = get16(entry + 2), count = get32(entry + 4);
+        const size = (TYPE_SIZE[type] || 1) * count;
+        let valueOffset = entry + 8;
+        if (size > 4) valueOffset = tiffStart + get32(entry + 8);
+        const val = readVal(view, valueOffset, type, count, little);
+        tags[which === 'gps' ? 'gps_' + tag : tag] = val;
+        if (which === 'ifd0' && tag === 0x8769 && typeof val === 'number') readIFD(view, tiffStart, tiffStart + val, little, tags, 'exif');
+        if (which === 'ifd0' && tag === 0x8825 && typeof val === 'number') readIFD(view, tiffStart, tiffStart + val, little, tags, 'gps');
+      }
+    }
+    function readVal(view, offset, type, count, little) {
+      const get16 = (o) => view.getUint16(o, little);
+      const get32 = (o) => view.getUint32(o, little);
+      const gets32 = (o) => view.getInt32(o, little);
+      try {
+        if (type === 2) { let s = ''; for (let i = 0; i < count; i++) { const c = view.getUint8(offset + i); if (c === 0) break; s += String.fromCharCode(c); } return s.trim(); }
+        if (type === 3) { const a = []; for (let i = 0; i < count; i++) a.push(get16(offset + i * 2)); return count === 1 ? a[0] : a; }
+        if (type === 4 || type === 9) { const a = []; for (let i = 0; i < count; i++) a.push(get32(offset + i * 4)); return count === 1 ? a[0] : a; }
+        if (type === 5) { const a = []; for (let i = 0; i < count; i++) { const n = get32(offset + i * 8), d = get32(offset + i * 8 + 4); a.push(d ? n / d : 0); } return count === 1 ? a[0] : a; }
+        if (type === 10) { const a = []; for (let i = 0; i < count; i++) { const n = gets32(offset + i * 8), d = gets32(offset + i * 8 + 4); a.push(d ? n / d : 0); } return count === 1 ? a[0] : a; }
+        if (type === 1 || type === 7) { const a = []; for (let i = 0; i < count; i++) a.push(view.getUint8(offset + i)); return count === 1 ? a[0] : a; }
+      } catch (e) { return null; }
+      return null;
+    }
+    function formatExifDate(s) {
+      const m = /^(\d{4}):(\d{2}):(\d{2})[ T](\d{2}):(\d{2})/.exec(String(s));
+      if (!m) return String(s);
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      let h = parseInt(m[4], 10); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
+      return `${months[parseInt(m[2],10)-1]} ${parseInt(m[3],10)}, ${m[1]} · ${h}:${m[5]} ${ap}`;
+    }
+    function extractLeaks(tags) {
+      const t = tags || {}; const leaks = [];
+      const lat = t['gps_2'], lon = t['gps_4'];
+      if (Array.isArray(lat) && Array.isArray(lon) && lat.length === 3) {
+        const toDec = (a, ref) => { let v = a[0] + a[1] / 60 + a[2] / 3600; if (ref === 'S' || ref === 'W') v = -v; return v; };
+        const la = toDec(lat, t['gps_1']), lo = toDec(lon, t['gps_3']);
+        leaks.push({ id: 'gps', cat: 'location', tag: 'GPS', title: 'Exact GPS coordinates', value: `${la.toFixed(5)}, ${lo.toFixed(5)}`, detail: 'Pinpoints exactly where this photo was taken.', severity: 'high', lat: la, lon: lo });
+      }
+      const make = t[0x010f], model = t[0x0110];
+      if (make || model) leaks.push({ id: 'device', cat: 'device', tag: 'CAM', title: 'Camera & device', value: [make, model].filter(Boolean).join(' '), detail: 'Fingerprints the exact device you carry.', severity: 'med' });
+      const dt = t[0x9003] || t[0x0132];
+      if (dt) leaks.push({ id: 'time', cat: 'time', tag: 'TIME', title: 'Date & time taken', value: formatExifDate(dt), detail: 'Reveals exactly when you were there.', severity: 'med' });
+      const sw = t[0x0131];
+      if (sw) leaks.push({ id: 'sw', cat: 'system', tag: 'OS', title: 'Software / OS version', value: String(sw), detail: 'Narrows down your device and software.', severity: 'low' });
+      return leaks;
+    }
+    function stripMetadata(file) {
+      return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          const c = document.createElement('canvas');
+          c.width = img.naturalWidth || img.width; c.height = img.naturalHeight || img.height;
+          c.getContext('2d').drawImage(img, 0, 0);
+          let type = 'image/jpeg';
+          if (file.type === 'image/webp') type = 'image/webp';
+          else if (file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/bmp' || file.type === 'image/x-icon' || file.type === 'image/svg+xml') type = 'image/png';
+          c.toBlob((b) => { URL.revokeObjectURL(url); if (b) resolve({ blob: b, url: URL.createObjectURL(b), width: c.width, height: c.height, type }); else reject(new Error('encode failed')); }, type, 0.92);
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('decode failed')); };
+        img.src = url;
+      });
+    }
+    function drawScene() {
+      const W = 1280, H = 960;
+      const c = document.createElement('canvas'); c.width = W; c.height = H;
+      const ctx = c.getContext('2d');
+      const sky = ctx.createLinearGradient(0, 0, 0, H * 0.7);
+      sky.addColorStop(0, '#243b6b'); sky.addColorStop(0.45, '#6d4d8a'); sky.addColorStop(0.8, '#e07a5f'); sky.addColorStop(1, '#f2cc8f');
+      ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+      const sun = ctx.createRadialGradient(W * 0.72, H * 0.42, 0, W * 0.72, H * 0.42, 180);
+      sun.addColorStop(0, 'rgba(255,240,200,0.95)'); sun.addColorStop(1, 'rgba(255,240,200,0)');
+      ctx.fillStyle = sun; ctx.fillRect(0, 0, W, H);
+      ctx.beginPath(); ctx.arc(W * 0.72, H * 0.42, 70, 0, Math.PI * 2); ctx.fillStyle = '#ffeecb'; ctx.fill();
+      const ridge = (yBase, amp, color) => {
+        ctx.beginPath(); ctx.moveTo(0, H); ctx.lineTo(0, yBase);
+        for (let x = 0; x <= W; x += 40) { const y = yBase + Math.sin(x * 0.012 + yBase) * amp + Math.cos(x * 0.05) * amp * 0.4; ctx.lineTo(x, y); }
+        ctx.lineTo(W, H); ctx.closePath(); ctx.fillStyle = color; ctx.fill();
+      };
+      ridge(H * 0.52, 26, '#7d4a63'); ridge(H * 0.6, 34, '#8c4f54'); ridge(H * 0.7, 40, '#7a3f47'); ridge(H * 0.82, 30, '#5e2f3a');
+      ctx.fillStyle = 'rgba(240,204,143,0.12)'; ctx.fillRect(0, H * 0.5, W, H * 0.2);
+      return c;
+    }
+    function buildExifApp1(o) {
+      const u16 = (v) => [v & 0xff, (v >> 8) & 0xff];
+      const u32 = (v) => [v & 0xff, (v >> 8) & 0xff, (v >> 16) & 0xff, (v >> 24) & 0xff];
+      const str = (s) => { const b = []; for (let i = 0; i < s.length; i++) b.push(s.charCodeAt(i) & 0xff); b.push(0); return b; };
+      const mk = str(o.make), md = str(o.model), sw = str(o.software), dt = str(o.datetime);
+      const ifd0Off = 8, ifd0Size = 2 + 5 * 12 + 4;
+      let d = ifd0Off + ifd0Size;
+      const mkOff = d; d += mk.length; const mdOff = d; d += md.length; const swOff = d; d += sw.length; const dtOff = d; d += dt.length;
+      const gpsOff = d, gpsSize = 2 + 4 * 12 + 4;
+      let g = gpsOff + gpsSize; const latOff = g; g += 24; const lonOff = g; g += 24; const total = g;
+      const buf = new Uint8Array(total);
+      const put = (arr, at) => buf.set(arr, at);
+      put([0x49, 0x49, 0x2a, 0x00], 0); put(u32(8), 4);
+      let p = ifd0Off; put(u16(5), p); p += 2;
+      const ent = (tag, type, count, val) => { put(u16(tag), p); put(u16(type), p + 2); put(u32(count), p + 4); put(val, p + 8); p += 12; };
+      ent(0x010f, 2, mk.length, u32(mkOff)); ent(0x0110, 2, md.length, u32(mdOff)); ent(0x0131, 2, sw.length, u32(swOff)); ent(0x0132, 2, dt.length, u32(dtOff)); ent(0x8825, 4, 1, u32(gpsOff));
+      put(u32(0), p); p += 4;
+      put(mk, mkOff); put(md, mdOff); put(sw, swOff); put(dt, dtOff);
+      p = gpsOff; put(u16(4), p); p += 2;
+      const ref = (ch) => [ch.charCodeAt(0), 0, 0, 0];
+      put(u16(0x0001), p); put(u16(2), p + 2); put(u32(2), p + 4); put(ref(o.latRef), p + 8); p += 12;
+      put(u16(0x0002), p); put(u16(5), p + 2); put(u32(3), p + 4); put(u32(latOff), p + 8); p += 12;
+      put(u16(0x0003), p); put(u16(2), p + 2); put(u32(2), p + 4); put(ref(o.lonRef), p + 8); p += 12;
+      put(u16(0x0004), p); put(u16(5), p + 2); put(u32(3), p + 4); put(u32(lonOff), p + 8); p += 12;
+      put(u32(0), p);
+      const dms = (dec) => { const a = Math.abs(dec), D = Math.floor(a), M = Math.floor((a - D) * 60), S = ((a - D) * 60 - M) * 60; return [[D, 1], [M, 1], [Math.round(S * 100), 100]]; };
+      const writeRat = (off, arr) => { let q = off; for (const [n, den] of arr) { put(u32(n), q); put(u32(den), q + 4); q += 8; } };
+      writeRat(latOff, dms(o.lat)); writeRat(lonOff, dms(o.lon));
+      const header = [0x45, 0x78, 0x69, 0x66, 0x00, 0x00];
+      const payloadLen = header.length + buf.length, segLen = payloadLen + 2;
+      const app1 = new Uint8Array(4 + payloadLen);
+      app1[0] = 0xff; app1[1] = 0xe1; app1[2] = (segLen >> 8) & 0xff; app1[3] = segLen & 0xff;
+      app1.set(header, 4); app1.set(buf, 4 + header.length);
+      return app1;
+    }
+    async function buildSampleFile() {
+      const canvas = drawScene();
+      const blob = await new Promise((r) => canvas.toBlob(r, 'image/jpeg', 0.9));
+      const orig = new Uint8Array(await blob.arrayBuffer());
+      const app1 = buildExifApp1({ make: 'Apple', model: 'iPhone 15 Pro', software: 'iOS 18.5', datetime: '2025:06:14 18:32:07', lat: 36.05445, lon: -112.14012, latRef: 'N', lonRef: 'W' });
+      const out = new Uint8Array(orig.length + app1.length);
+      out.set(orig.slice(0, 2), 0); out.set(app1, 2); out.set(orig.slice(2), 2 + app1.length);
+      return new File([out], 'IMG_4821.jpg', { type: 'image/jpeg' });
+    }
+
+    this._mod = { parseJpegExif, extractLeaks, stripMetadata, buildSampleFile };
+    return this._mod;
+  }
+
+  onPick = (e) => {
+    const f = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (f) this.handleFile(f);
+  };
+
+  onSample = async () => {
+    try { const mod = await this.getMod(); this.handleFile(await mod.buildSampleFile()); }
+    catch (err) { this.setState({ error: 'Could not build the sample photo.' }); }
+  };
+
+  onDragOver = (e) => { e.preventDefault(); if (!this.state.dragOver) this.setState({ dragOver: true }); };
+  onDragLeave = (e) => { e.preventDefault(); this.setState({ dragOver: false }); };
+  onDrop = (e) => {
+    e.preventDefault();
+    this.setState({ dragOver: false });
+    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) this.handleFile(f);
+  };
+
+  async handleFile(file) {
+    if (!file || !/^image\//.test(file.type)) {
+      this.setState({ error: 'Please choose an image file.' });
+      return;
+    }
+    clearTimeout(this._t1); clearTimeout(this._t2);
+    this.revoke(this.state.originalUrl); this.revoke(this.state.cleanUrl);
+    const originalUrl = URL.createObjectURL(file);
+    const imgAspect = await new Promise((res) => {
+      const im = new Image();
+      im.onload = () => res((im.naturalWidth || 4) + ' / ' + (im.naturalHeight || 3));
+      im.onerror = () => res('4 / 3');
+      im.src = originalUrl;
+    });
+    this.setState({
+      stage: 'analyzing', error: '', fileName: file.name, file,
+      originalUrl, cleanUrl: null, leaks: [], faceBoxes: [], reveal: false, imgAspect,
+      vStage: 'collapsed', vError: '', vFindings: [], vReport: null, vReveal: false, vDemo: false,
+    });
+
+    let leaks = [];
+    try {
+      const mod = await this.getMod();
+      const buf = await file.arrayBuffer();
+      leaks = mod.extractLeaks(mod.parseJpegExif(buf).tags);
+    } catch (e) { leaks = []; }
+
+    let faceBoxes = [];
+    try { faceBoxes = await this.detectFaces(originalUrl); } catch (e) {}
+    if (faceBoxes.length) {
+      leaks.push({
+        id: 'faces', cat: 'identity', tag: 'FACE',
+        title: faceBoxes.length > 1 ? 'Recognizable faces' : 'Recognizable face',
+        value: faceBoxes.length + ' detected in frame',
+        detail: 'Can be matched to identify people in the photo.', severity: 'high',
+      });
+    }
+
+    // Guarantee the Apple-Intelligence processing moment plays for at least ~4.2s.
+    await new Promise((r) => { this._t2 = setTimeout(r, 4200); });
+    if (this.state.stage !== 'analyzing') return;
+    this.setState({ leaks, faceBoxes, stage: 'results', reveal: false });
+    const gps = leaks.find((l) => l.id === 'gps' && typeof l.lat === 'number');
+    if (gps) { this.setState({ geoPlace: '', geoStatus: 'loading' }); this.reverseGeocode(gps.lat, gps.lon); }
+    else { this.setState({ geoPlace: '', geoStatus: '' }); }
+    this._t1 = setTimeout(() => {
+      if (this.state.stage === 'results') this.setState({ reveal: true });
+    }, 60);
+  }
+
+  detectFaces(url) {
+    return new Promise((resolve) => {
+      if (!('FaceDetector' in window)) return resolve([]);
+      const img = new Image();
+      img.onload = async () => {
+        try {
+          const fd = new window.FaceDetector({ maxDetectedFaces: 8, fastMode: true });
+          const faces = await fd.detect(img);
+          const W = img.naturalWidth, H = img.naturalHeight;
+          resolve(faces.map((f) => ({
+            x: (f.boundingBox.x / W) * 100, y: (f.boundingBox.y / H) * 100,
+            w: (f.boundingBox.width / W) * 100, h: (f.boundingBox.height / H) * 100,
+          })));
+        } catch (e) { resolve([]); }
+      };
+      img.onerror = () => resolve([]);
+      img.src = url;
+    });
+  }
+
+  async reverseGeocode(lat, lon) {
+    const fallback = () => {
+      // Offline nicety so the built-in sample (Grand Canyon) always resolves.
+      if (Math.abs(lat - 36.05445) < 0.03 && Math.abs(lon + 112.14012) < 0.03) {
+        this.setState({ geoPlace: 'Grand Canyon Village, Arizona, USA', geoStatus: 'done' });
+      } else {
+        this.setState({ geoStatus: 'fail' });
+      }
+    };
+    try {
+      const ctrl = new AbortController();
+      const to = setTimeout(() => ctrl.abort(), 6500);
+      const url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=14&addressdetails=1&lat=' + lat + '&lon=' + lon;
+      const r = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: ctrl.signal });
+      clearTimeout(to);
+      if (!r.ok) throw new Error('geo');
+      const data = await r.json();
+      const a = data.address || {};
+      const place = [a.city || a.town || a.village || a.hamlet || a.suburb || a.county, a.state || a.region, a.country].filter(Boolean).join(', ');
+      if (place) this.setState({ geoPlace: place, geoStatus: 'done' });
+      else if (data.display_name) this.setState({ geoPlace: data.display_name, geoStatus: 'done' });
+      else fallback();
+    } catch (e) { fallback(); }
+  }
+
+  onClean = async () => {
+    this.setState({ stage: 'cleaning' });
+    try {
+      const mod = await this.getMod();
+      const [res] = await Promise.all([
+        mod.stripMetadata(this.state.file),
+        new Promise((r) => setTimeout(r, 2500)),
+      ]);
+      this.revoke(this.state.cleanUrl);
+      this.setState({ cleanUrl: res.url, cleanType: res.type, stage: 'done' });
+    } catch (e) {
+      this.setState({ error: 'Could not process this image. Try a different file.', stage: 'results' });
+    }
+  };
+
+  onDownload = () => {
+    if (!this.state.cleanUrl) return;
+    const a = document.createElement('a');
+    a.href = this.state.cleanUrl;
+    const base = (this.state.fileName || 'photo').replace(/\.[^.]+$/, '');
+    a.download = base + '-clean.' + this.extFor(this.state.cleanType);
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+
+  onReset = () => {
+    clearTimeout(this._t1); clearTimeout(this._t2); clearTimeout(this._ta);
+    this.revoke(this.state.originalUrl); this.revoke(this.state.cleanUrl);
+    this.revoke(this._aiCleanUrl); this._aiCleanUrl = null; this._aiBaseImg = null; this._aiCleanBlob = null;
+    this.setState({
+      stage: 'idle', error: '', fileName: '', file: null,
+      originalUrl: null, cleanUrl: null, leaks: [], faceBoxes: [], reveal: false, imgAspect: '4 / 3', dragOver: false,
+      vStage: 'collapsed', vError: '', vFindings: [], vReport: null, vReveal: false, vDemo: false,
+      geoPlace: '', geoStatus: '',
+    });
+  };
+
+  // ─────────── hosting config: fill window.XENLENS_CONFIG to go live ────────
+  // Empty (this preview) → on-device / demo mode.
+  // Filled → real backend: Supabase auth + Express /api/* + Stripe.
+  APP_CONFIG() {
+    return (typeof window !== 'undefined' && window.XENLENS_CONFIG) || { apiUrl: '', supabaseUrl: '', supabaseAnonKey: '' };
+  }
+  backendConfigured() { const c = this.APP_CONFIG(); return !!c.apiUrl && !!c.supabaseUrl && !!c.supabaseAnonKey; }
+
+  async getSupabase() {
+    const c = this.APP_CONFIG();
+    if (!c.supabaseUrl || !c.supabaseAnonKey) return null;
+    if (this._sb) return this._sb;
+    if (!window.supabase) {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+        s.onload = resolve; s.onerror = () => reject(new Error('supabase load failed'));
+        document.head.appendChild(s);
+      });
+    }
+    this._sb = window.supabase.createClient(c.supabaseUrl, c.supabaseAnonKey);
+    return this._sb;
+  }
+  async getSession() {
+    try { const sb = await this.getSupabase(); if (!sb) return null; const { data } = await sb.auth.getSession(); return (data && data.session) || null; } catch (e) { return null; }
+  }
+  async apiFetch(path, init) {
+    const c = this.APP_CONFIG();
+    const session = await this.getSession();
+    const headers = Object.assign({ 'Content-Type': 'application/json' }, (init && init.headers) || {});
+    if (session && session.access_token) headers['Authorization'] = 'Bearer ' + session.access_token;
+    const res = await fetch(c.apiUrl + path, Object.assign({}, init, { headers }));
+    let body = null; try { body = await res.json(); } catch (e) {}
+    if (!res.ok) { const err = new Error((body && body.error) || ('Request failed (' + res.status + ')')); err.status = res.status; err.code = body && body.code; throw err; }
+    return body;
+  }
+  onSignIn = () => this.setState({ authOpen: true, planNote: '' });
+  onOpenAuth = () => this.setState({ authOpen: true, planNote: '' });
+  onCloseAuth = () => this.setState({ authOpen: false });
+  onSignInWith = async (provider) => {
+    const sb = await this.getSupabase();
+    if (!sb) { this.setState({ authOpen: false, plansOpen: true, modalTab: 'account', planNote: 'err:Sign-in needs the backend configured (window.XENLENS_CONFIG) — see DEPLOY.md.' }); return; }
+    await sb.auth.signInWithOAuth({ provider, options: { redirectTo: window.location.href } });
+  };
+  onSignInGoogle = () => this.onSignInWith('google');
+  onSignOut = async () => {
+    const sb = await this.getSupabase(); if (!sb) return;
+    await sb.auth.signOut();
+    this.setState({ signedIn: false, email: null, tier: 'free', balance: 0, isAdmin: false, plansOpen: false });
+  };
+
+  // ─────────────────────── migrated: persisted feature state ───────────────
+  async loadFeatureState() {
+    // Local-first so the app always works (offline / preview).
+    try {
+      const tier = localStorage.getItem('xenlens-tier') || 'free';
+      const bal = parseFloat(localStorage.getItem('xenlens-balance') || '0') || 0;
+      let hist = [];
+      try { hist = JSON.parse(localStorage.getItem('xenlens-history') || '[]') || []; } catch (e) {}
+      this.setState({ tier, balance: bal, history: hist });
+    } catch (e) {}
+    // Backend is the source of truth once configured + signed in.
+    const c = this.APP_CONFIG();
+    if (!c.apiUrl || !c.supabaseUrl) return;
+    try {
+      const session = await this.getSession();
+      this.setState({ signedIn: !!session, email: session && session.user ? session.user.email : null });
+      if (!session) return;
+      const bal = await this.apiFetch('/api/user/balance', { method: 'GET' });
+      if (bal) this.setState({ tier: bal.tier || 'free', balance: Number(bal.balance) || 0, isAdmin: !!bal.is_admin, email: bal.email || this.state.email });
+      try {
+        const h = await this.apiFetch('/api/user/history', { method: 'GET' });
+        if (h && h.scans) this.setState({ history: h.scans.map((r) => ({ id: r.id, model: r.model_used, modelId: r.model_used, risk: r.risk_level || 'unknown', findings: 0, when: new Date(r.created_at).getTime() })) });
+      } catch (e) {}
+    } catch (e) {}
+  }
+
+  MODELS() {
+    return [
+      { id: 'anthropic/claude-opus-4.8-fast', label: 'Claude Opus — Anthropic flagship', tier: 'paid', dot: '#fb7185', slug: 'anthropic/claude-opus-4.8-fast' },
+    ];
+  }
+  COST_HINTS() {
+    return [
+      { label: 'Claude Opus — Anthropic flagship', dot: '#fb7185', perScan: 'included with Pro' },
+    ];
+  }
+  hasPaidAccess() { return this.state.tier === 'paid'; }
+
+  // ── plans / modals ──
+  onStop = (e) => { e.stopPropagation(); };
+  onOpenPlans = () => {
+    this.setState({ plansOpen: true, modalTab: 'billing', planNote: '' });
+  };
+  onClosePlans = () => this.setState({ plansOpen: false });
+  onOpenHistory = () => this.setState({ plansOpen: true, modalTab: 'history', historyView: true });
+  onShowPlansTab = () => this.setState({ modalTab: 'plans' });
+  onShowBilling = () => this.setState({ modalTab: 'billing' });
+  onShowAccount = () => this.setState({ modalTab: 'account' });
+  onOpenAccount = () => this.setState({ plansOpen: true, modalTab: 'account', planNote: '' });
+  onGoPlans = () => {
+    this.setState({ creditsOpen: false, plansOpen: false });
+    const go = () => { const el = document.getElementById('pricing'); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 68, behavior: 'smooth' }); };
+    if (this.state.stage !== 'idle') { this.onReset(); setTimeout(go, 90); } else { go(); }
+  };
+  handleCheckoutReturn() {
+    try {
+      const status = new URLSearchParams(window.location.search).get('status');
+      if (!status) return;
+      if (status === 'success') {
+        this.setState({ plansOpen: true, modalTab: 'billing', toast: 'Credits added! Your AI scanning is now active.', toastErr: false });
+        setTimeout(() => { void this.loadFeatureState(); }, 2000);
+      } else if (status === 'cancelled') {
+        this.setState({ plansOpen: true, modalTab: 'billing', toast: 'Checkout cancelled — no charge was made.', toastErr: true });
+      }
+      window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+    } catch (e) {}
+  }
+  onCloseCredits = () => this.setState({ creditsOpen: false });
+  onModelChange = (e) => { const m = e.target.value; this.setState({ chosenModel: m }); try { localStorage.setItem('xenlens-model', m); } catch (e2) {} };
+
+  // Real Stripe Checkout when the backend is configured; otherwise a local demo
+  // top-up so the paid flow is testable in this preview.
+  onAddCredits = async () => {
+    const c = this.APP_CONFIG();
+    if (c.apiUrl && c.supabaseUrl) {
+      try {
+        const session = await this.getSession();
+        if (!session) { await this.onSignIn(); return; }
+        const data = await this.apiFetch('/api/stripe/checkout', { method: 'POST' });
+        if (data && data.url) { window.location.href = data.url; return; }
+        this.setState({ planNote: 'err:Could not start checkout. Please try again.' });
+      } catch (e) { this.setState({ planNote: 'err:Could not start checkout. Please try again.' }); }
+      return;
+    }
+    const bal = Math.round((this.state.balance + 5) * 1e6) / 1e6;
+    try { localStorage.setItem('xenlens-tier', 'paid'); localStorage.setItem('xenlens-balance', String(bal)); } catch (e) {}
+    this.setState({ tier: 'paid', balance: bal, creditsOpen: false, planNote: 'ok:Demo mode — this preview has no backend, so no real charge was made. Connect Stripe (see DEPLOY.md) to take live payments.' });
+  };
+
+  // ─────────────────────────── migrated: AI visual scan ────────────────────
+  async stripAndEncode(file) {
+    const mod = await this.getMod();
+    const res = await mod.stripMetadata(file);
+    this._aiCleanBlob = res.blob; this._aiCleanType = res.type;
+    if (this._aiCleanUrl) this.revoke(this._aiCleanUrl);
+    this._aiCleanUrl = res.url;
+    const b64 = await new Promise((resolve) => { const r = new FileReader(); r.onloadend = () => resolve(String(r.result).split(',')[1]); r.readAsDataURL(res.blob); });
+    return { base64: b64, url: res.url };
+  }
+
+  locationToRect(loc) {
+    switch (loc) {
+      case 'top-left': return { x: 2, y: 2, w: 48, h: 48 };
+      case 'top-right': return { x: 50, y: 2, w: 48, h: 48 };
+      case 'bottom-left': return { x: 2, y: 50, w: 48, h: 48 };
+      case 'bottom-right': return { x: 50, y: 50, w: 48, h: 48 };
+      case 'center': return { x: 25, y: 25, w: 50, h: 50 };
+      default: return { x: 3, y: 3, w: 94, h: 94 };
+    }
+  }
+
+  onRunVisual = async () => {
+    if (!this.state.file) return;
+    const model = this.MODELS().find((m) => m.id === this.state.chosenModel) || this.MODELS()[0];
+    const cfg = this.APP_CONFIG();
+    const backendOn = this.backendConfigured();
+    let session = null;
+    try { session = await this.getSession(); } catch (e) {}
+    // The AI scan requires an account (when live) and an Eclipse plan.
+    if (backendOn && !session) { this.setState({ authOpen: true }); return; }
+    if (!this.hasPaidAccess()) { this.setState({ creditsOpen: true }); return; }
+    const useBackend = !!cfg.apiUrl && !!session;
+    this.setState({ vStage: 'scanning', vError: '', vFindings: [], vReport: null, vReveal: false, vDemo: !useBackend });
+    let enc;
+    try { enc = await this.stripAndEncode(this.state.file); }
+    catch (e) { this.setState({ vStage: 'error', vError: 'Could not read this image. Try a different file.' }); return; }
+    this._aiBaseImg = await new Promise((resolve) => { const im = new Image(); im.onload = () => resolve(im); im.onerror = () => resolve(null); im.src = enc.url; });
+    let report;
+    if (useBackend) {
+      try {
+        const data = await this.apiFetch('/api/analyze', { method: 'POST', body: JSON.stringify({ base64Image: enc.base64, chosenModel: model.id }) });
+        report = data.report || { risk_level: 'unknown', summary: '', findings: [] };
+        if (typeof data.remaining_balance === 'number') this.setState({ balance: data.remaining_balance });
+        if (data.tier) this.setState({ tier: data.tier });
+        if (data.credits_exhausted) this.setState({ creditsOpen: true });
+        void this.loadFeatureState();
+      } catch (e) {
+        if (e && (e.status === 402 || e.code === 'CREDITS_EXHAUSTED')) { this.setState({ vStage: 'collapsed', creditsOpen: true }); return; }
+        if (e && e.status === 401) { this.setState({ vStage: 'error', vError: 'Please sign in to run a scan.' }); return; }
+        this.setState({ vStage: 'error', vError: (e && e.message) || 'Scan failed. Please try again.' }); return;
+      }
+    } else {
+      await new Promise((r) => setTimeout(r, 1600));
+      report = this.demoReport();
+    }
+    const findings = (report.findings || []).map((f) => ({ ...f, redacted: false }));
+    this.setState({ vReport: report, vFindings: findings, vStage: 'results', vReveal: false });
+    setTimeout(() => { this.paintAICanvas(); this.setState({ vReveal: true }); }, 40);
+  };
+
+  parseReport(text) {
+    try { const clean = String(text).replace(/```json|```/g, '').trim(); const p = JSON.parse(clean); if (p && typeof p === 'object') return p; } catch (e) {}
+    return { risk_level: 'unknown', summary: String(text).slice(0, 300), findings: [] };
+  }
+
+  demoReport() {
+    return {
+      risk_level: 'high',
+      summary: 'Demo scan — this image reveals a readable street sign, a license plate and a reflected face. Sign in and upgrade to Pro to run the real Claude Opus scan.',
+      findings: [
+        { type: 'street_sign', description: 'A readable street-name sign in the top-left pins the neighbourhood.', severity: 'high', rough_location: 'top-left' },
+        { type: 'license_plate', description: 'A vehicle license plate is legible enough to trace ownership.', severity: 'high', rough_location: 'bottom-right' },
+        { type: 'reflection', description: 'A face is visible in a window reflection near the centre.', severity: 'medium', rough_location: 'center' },
+      ],
+    };
+  }
+
+  paintAICanvas() {
+    const canvas = document.getElementById('ai-canvas'); const img = this._aiBaseImg;
+    if (!canvas || !img) return;
+    canvas.width = img.naturalWidth || img.width; canvas.height = img.naturalHeight || img.height;
+    const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0);
+  }
+
+  redactFinding = (e) => {
+    const i = parseInt(e.currentTarget.dataset.index, 10);
+    const f = this.state.vFindings[i];
+    if (!f || f.redacted) return;
+    const canvas = document.getElementById('ai-canvas'); const img = this._aiBaseImg;
+    if (!canvas || !img) return;
+    const rect = this.locationToRect(f.rough_location);
+    const ctx = canvas.getContext('2d');
+    const x = (rect.x / 100) * canvas.width, y = (rect.y / 100) * canvas.height, w = (rect.w / 100) * canvas.width, h = (rect.h / 100) * canvas.height;
+    ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip(); ctx.filter = 'blur(18px)'; ctx.drawImage(img, 0, 0, canvas.width, canvas.height); ctx.filter = 'none'; ctx.fillStyle = 'rgba(10,10,16,0.55)'; ctx.fillRect(x, y, w, h); ctx.restore();
+    const fs = Math.max(14, Math.min(w, h) * 0.14);
+    ctx.save(); ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.font = fs + 'px Georgia, serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('REDACTED', x + w / 2, y + h / 2); ctx.restore();
+    this.setState((st) => ({ vFindings: st.vFindings.map((x2, j) => (j === i ? { ...x2, redacted: true } : x2)) }));
+  };
+
+  onDownloadRedacted = () => {
+    if (!this.hasPaidAccess()) { this.setState({ creditsOpen: true }); return; }
+    const canvas = document.getElementById('ai-canvas'); if (!canvas) return;
+    canvas.toBlob((b) => {
+      if (!b) return;
+      const url = URL.createObjectURL(b); const a = document.createElement('a'); a.href = url;
+      const base = (this.state.fileName || 'photo').replace(/\.[^.]+$/, '');
+      a.download = base + '-redacted.jpg'; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    }, 'image/jpeg', 0.95);
+  };
+  onDownloadStripped = () => {
+    const b = this._aiCleanBlob; if (!b) { this.onClean(); return; }
+    const url = URL.createObjectURL(b); const a = document.createElement('a'); a.href = url;
+    const base = (this.state.fileName || 'photo').replace(/\.[^.]+$/, '');
+    a.download = base + '-clean.' + this.extFor(this._aiCleanType); document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+  };
+
+  pushHistory(model, report) {
+    const row = { id: Date.now() + '-' + Math.random().toString(36).slice(2, 7), model: model.label, modelId: model.id, risk: report.risk_level || 'unknown', findings: (report.findings || []).length, when: Date.now() };
+    const hist = [row, ...(this.state.history || [])].slice(0, 50);
+    try { localStorage.setItem('xenlens-history', JSON.stringify(hist)); } catch (e) {}
+    this.setState({ history: hist });
+  }
+
+  // ───────────────────────── batch clean + zip export ─────────────────────
+  onBatchPick = async (e) => {
+    const files = [...(e.target.files || [])].filter((f) => /^image\//.test(f.type));
+    e.target.value = '';
+    if (!files.length) return;
+    this.setState({ batchOpen: true, batchBusy: true });
+    const mod = await this.getMod();
+    const items = [];
+    for (const f of files) {
+      try { const r = await mod.stripMetadata(f); items.push({ name: f.name, blob: r.blob, url: r.url, type: r.type }); } catch (err) {}
+    }
+    this.setState((st) => ({ batchItems: [...st.batchItems, ...items], batchBusy: false }));
+  };
+  onAddMoreBatch = () => { const el = document.getElementById('batch-file'); if (el) el.click(); };
+  onRemoveBatch = (e) => { const i = parseInt(e.currentTarget.dataset.index, 10); this.setState((st) => { const arr = [...st.batchItems]; const it = arr.splice(i, 1)[0]; if (it) this.revoke(it.url); return { batchItems: arr }; }); };
+  onCloseBatch = () => { (this.state.batchItems || []).forEach((it) => this.revoke(it.url)); this.setState({ batchOpen: false, batchItems: [] }); };
+
+  crc32(bytes) {
+    let table = this._crcTable;
+    if (!table) { table = []; for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); table[n] = c >>> 0; } this._crcTable = table; }
+    let crc = 0xFFFFFFFF;
+    for (let i = 0; i < bytes.length; i++) crc = (crc >>> 8) ^ table[(crc ^ bytes[i]) & 0xFF];
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+  makeZip(files) {
+    const u16 = (v) => [v & 0xff, (v >> 8) & 0xff];
+    const u32 = (v) => [v & 0xff, (v >> 8) & 0xff, (v >> 16) & 0xff, (v >> 24) & 0xff];
+    const enc = new TextEncoder();
+    const chunks = []; const central = []; let offset = 0;
+    for (const f of files) {
+      const nameBytes = enc.encode(f.name);
+      const crc = this.crc32(f.bytes); const size = f.bytes.length;
+      const local = new Uint8Array([].concat(u32(0x04034b50), u16(20), u16(0), u16(0), u16(0), u16(0), u32(crc), u32(size), u32(size), u16(nameBytes.length), u16(0)));
+      chunks.push(local, nameBytes, f.bytes);
+      central.push(new Uint8Array([].concat(u32(0x02014b50), u16(20), u16(20), u16(0), u16(0), u16(0), u16(0), u32(crc), u32(size), u32(size), u16(nameBytes.length), u16(0), u16(0), u16(0), u16(0), u32(0), u32(offset))), nameBytes);
+      offset += local.length + nameBytes.length + size;
+    }
+    let centralSize = 0; for (const c of central) centralSize += c.length;
+    const end = new Uint8Array([].concat(u32(0x06054b50), u16(0), u16(0), u16(files.length), u16(files.length), u32(centralSize), u32(offset), u16(0)));
+    return new Blob([...chunks, ...central, end], { type: 'application/zip' });
+  }
+  onDownloadZip = async () => {
+    const items = this.state.batchItems || []; if (!items.length) return;
+    this.setState({ batchBusy: true });
+    const files = []; const seen = {};
+    for (const it of items) {
+      const base = (it.name || 'photo').replace(/\.[^.]+$/, '');
+      const ext = this.extFor(it.type);
+      let name = base + '-clean.' + ext; let n = 2;
+      while (seen[name]) { name = base + '-clean-' + (n++) + '.' + ext; }
+      seen[name] = 1;
+      files.push({ name, bytes: new Uint8Array(await it.blob.arrayBuffer()) });
+    }
+    const blob = this.makeZip(files);
+    const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'xyris-clean.zip';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
+    this.setState({ batchBusy: false });
+  };
+
+  renderVals() {
+    const s = this.state;
+    const stage = s.stage;
+    const reveal = s.reveal;
+    const ACC = { location: '#f472b6', identity: '#fb7185', device: '#a78bfa', time: '#22d3ee', system: '#2dd4bf' };
+    const SEV = { high: ['HIGH RISK', '#fb7185'], med: ['MEDIUM', '#fbbf24'], low: ['LOW', '#34d399'] };
+    const anchors = { location: [50, 80], device: [80, 19], time: [18, 17], system: [83, 73] };
+    const leaks = s.leaks || [];
+
+    const leakCards = leaks.map((l, i) => {
+      const acc = ACC[l.cat] || '#8b5cf6';
+      const sev = SEV[l.severity] || SEV.med;
+      const d = (0.1 + i * 0.1).toFixed(2);
+      let place = '', placeColor = 'var(--gold)';
+      if (l.id === 'gps') {
+        if (s.geoStatus === 'done' && s.geoPlace) { place = s.geoPlace; }
+        else if (s.geoStatus === 'loading') { place = 'Resolving location\u2026'; placeColor = 'var(--muted-2)'; }
+        else if (s.geoStatus === 'fail') { place = 'Place name unavailable offline'; placeColor = 'var(--muted-2)'; }
+      }
+      const placeShow = !!place;
+      return {
+        tag: l.tag, title: l.title, value: l.value, detail: l.detail, sevLabel: sev[0],
+        style: `position:relative; padding:14px 16px 15px 18px; border-radius:16px; background:var(--card); border:1px solid var(--border); overflow:hidden; opacity:${reveal ? 1 : 0}; transform:translateY(${reveal ? 0 : 12}px); transition:opacity .55s ease ${d}s, transform .55s cubic-bezier(.22,1,.36,1) ${d}s;`,
+        barStyle: `position:absolute; left:0; top:0; bottom:0; width:3px; background:${acc};`,
+        dotStyle: `width:7px; height:7px; border-radius:50%; background:${acc}; box-shadow:0 0 10px ${acc};`,
+        tagStyle: `font-family:'Newsreader',Georgia,serif; font-size:10px; letter-spacing:.12em; color:${acc};`,
+        sevStyle: `margin-left:auto; font-family:'Newsreader',Georgia,serif; font-size:9px; letter-spacing:.08em; color:${sev[1]}; border:1px solid ${sev[1]}55; padding:2px 7px; border-radius:6px;`,
+        place,
+        placeWrapStyle: placeShow ? 'margin-top:6px; display:flex; align-items:center; gap:7px;' : 'display:none;',
+        placeDotStyle: 'width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 8px var(--gold); flex:none;',
+        placeTextStyle: `font-family:'Newsreader',Georgia,serif; font-size:12px; color:${placeColor};`,
+      };
+    });
+
+    const pins = leaks.filter((l) => anchors[l.cat]).map((l, i) => {
+      const acc = ACC[l.cat] || '#8b5cf6';
+      const [x, y] = anchors[l.cat];
+      const d = (0.25 + i * 0.12).toFixed(2);
+      return {
+        tag: l.tag, value: l.value,
+        style: `position:absolute; left:${x}%; top:${y}%; transform:translate(-50%,-50%) scale(${reveal ? 1 : 0.3}); opacity:${reveal ? 1 : 0}; transition:all .55s cubic-bezier(.34,1.56,.64,1) ${d}s; display:flex; align-items:center; gap:8px; padding:6px 12px 6px 9px; background:rgba(8,8,16,.66); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.16); border-radius:999px; white-space:nowrap; box-shadow:0 8px 24px rgba(0,0,0,.45), 0 0 0 4px ${acc}22; pointer-events:none;`,
+        dotStyle: `width:8px; height:8px; border-radius:50%; background:${acc}; box-shadow:0 0 12px ${acc};`,
+        tagStyle: `font-family:'Newsreader',Georgia,serif; font-size:10px; letter-spacing:.1em; color:#fff;`,
+        valStyle: `font-family:'Newsreader',Georgia,serif; font-size:10px; color:rgba(255,255,255,.6); max-width:150px; overflow:hidden; text-overflow:ellipsis;`,
+      };
+    });
+
+    const faceBoxes = (s.faceBoxes || []).map((b, i) => ({
+      style: `position:absolute; left:${b.x}%; top:${b.y}%; width:${b.w}%; height:${b.h}%; border:2px solid #fb7185; border-radius:10px; box-shadow:0 0 18px rgba(251,113,133,.6), inset 0 0 12px rgba(251,113,133,.2); opacity:${reveal ? 1 : 0}; transform:scale(${reveal ? 1 : 1.15}); transition:all .5s ease ${(0.3 + i * 0.1).toFixed(2)}s;`,
+    }));
+
+    const cleaningChips = leaks.map((l, i) => {
+      const acc = ACC[l.cat] || '#8b5cf6';
+      const left = 14 + ((i * 19) % 66);
+      return {
+        label: l.tag,
+        style: `position:absolute; left:${left}%; bottom:18%; font-family:'Newsreader',Georgia,serif; font-size:11px; letter-spacing:.08em; color:#fff; padding:5px 11px; border-radius:999px; background:rgba(8,8,16,.6); border:1px solid ${acc}66; box-shadow:0 0 16px ${acc}66; animation:floatUp 2.5s cubic-bezier(.4,0,.2,1) ${(0.2 + i * 0.2).toFixed(2)}s forwards; opacity:0; pointer-events:none;`,
+      };
+    });
+
+    let photoTiles = [];
+    if (s.originalUrl) {
+      const cols = 5, rows = 4;
+      if (!this._tilesV2) {
+        this._tilesV2 = [];
+        for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+          const dx = (Math.random() * 2 - 1) * 230, dy = (Math.random() * 2 - 1) * 195;
+          const k = (Math.random() * 2 - 1) * 0.5;
+          this._tilesV2.push({
+            c, r, dx, dy,
+            mx: (dx * 0.5 + (-dy) * k).toFixed(1),
+            my: (dy * 0.5 + dx * k).toFixed(1),
+            rot: ((Math.random() * 2 - 1) * 90).toFixed(1),
+            dl: (Math.random() * 0.7).toFixed(2),
+            dur: (2.0 + Math.random() * 0.8).toFixed(2),
+          });
+        }
+      }
+      photoTiles = this._tilesV2.map((t) => {
+        const tp = (t.r / rows * 100).toFixed(3), lf = (t.c / cols * 100).toFixed(3);
+        const rt = ((cols - 1 - t.c) / cols * 100).toFixed(3), bt = ((rows - 1 - t.r) / rows * 100).toFixed(3);
+        const ox = ((t.c + 0.5) / cols * 100).toFixed(2), oy = ((t.r + 0.5) / rows * 100).toFixed(2);
+        return { style: `position:absolute; inset:0; background-image:url(${s.originalUrl}); background-size:100% 100%; clip-path:inset(${tp}% ${rt}% ${bt}% ${lf}%); transform-origin:${ox}% ${oy}%; --sx:${t.dx.toFixed(1)}px; --sy:${t.dy.toFixed(1)}px; --mx:${t.mx}px; --my:${t.my}px; --srot:${t.rot}deg; animation:tileIn ${t.dur}s cubic-bezier(.25,.65,.2,1) ${t.dl}s both; will-change:transform,opacity; backface-visibility:hidden;` };
+      });
+    }
+    const removedChips = leaks.map((l) => ({ label: l.tag }));
+    const n = leaks.length;
+
+    const mkImg = (src, extra) => src
+      ? React.createElement('img', { src, alt: '', style: Object.assign({ display: 'block', width: '100%' }, extra || {}) })
+      : null;
+    const analysisImg = mkImg(s.originalUrl);
+    const sparkles = this._sparkles || (this._sparkles = Array.from({ length: 16 }, (_, i) => {
+      const cols = ['#ffffff', '#ff8fc4', '#b69bff', '#8fc0ff', '#7bf0d8', '#ffe08a'];
+      const c = cols[i % cols.length];
+      const left = Math.round(8 + Math.random() * 84);
+      const top = Math.round(10 + Math.random() * 78);
+      const sz = (3 + Math.random() * 4).toFixed(1);
+      const delay = (Math.random() * 2.6).toFixed(2);
+      const dur = (2 + Math.random() * 1.8).toFixed(2);
+      return { style: `position:absolute; left:${left}%; top:${top}%; width:${sz}px; height:${sz}px; border-radius:50%; background:${c}; box-shadow:0 0 8px ${c}, 0 0 16px ${c}; opacity:0; pointer-events:none; animation:sparkleFloat ${dur}s ease-in-out ${delay}s infinite;` };
+    }));
+    const cleaningImg = mkImg(s.originalUrl, { animation: 'breathe 3.2s ease-in-out infinite' });
+    const doneImg = mkImg(s.cleanUrl);
+
+    // ── migrated features view-model ──
+    const models = this.MODELS();
+    const paidAccess = this.hasPaidAccess();
+    const curModel = models.find((m) => m.id === s.chosenModel) || models[0];
+    const modelOptions = models.map((m) => {
+      const locked = m.tier === 'paid' && !paidAccess;
+      return { id: m.id, label: m.label + (locked ? ' — needs key / credits' : ''), disabled: locked };
+    });
+    const SEVc = { high: '#fb7185', medium: '#fbbf24', med: '#fbbf24', low: '#34d399' };
+    const SEVL = { high: ['HIGH RISK', '#fb7185'], medium: ['MEDIUM', '#fbbf24'], med: ['MEDIUM', '#fbbf24'], low: ['LOW', '#34d399'] };
+    const vFindings = s.vFindings || [];
+    const vReveal = s.vReveal;
+    const vBoxes = vFindings.map((f, i) => {
+      const r = this.locationToRect(f.rough_location);
+      const col = f.redacted ? '#34d399' : (SEVc[f.severity] || '#fb7185');
+      const dl = (0.05 + i * 0.08).toFixed(2);
+      return {
+        index: i,
+        label: f.redacted ? '✓ redacted' : String(f.type || '').replace(/_/g, ' '),
+        boxStyle: `position:absolute; left:${r.x}%; top:${r.y}%; width:${r.w}%; height:${r.h}%; border:2px solid ${col}; background:${f.redacted ? 'rgba(52,211,153,.10)' : 'rgba(226,75,74,.14)'}; border-radius:10px; cursor:${f.redacted ? 'default' : 'pointer'}; display:flex; align-items:flex-start; justify-content:flex-start; padding:6px; opacity:${vReveal ? 1 : 0}; transform:scale(${vReveal ? 1 : 1.05}); transition:opacity .4s ease ${dl}s, transform .4s ease ${dl}s, border-color .2s, background .2s;`,
+        tagStyle: `font-size:10px; letter-spacing:.04em; color:#fff; background:rgba(8,8,16,.7); padding:2px 7px; border-radius:6px; pointer-events:none;`,
+      };
+    });
+    const vCards = vFindings.map((f, i) => {
+      const sl = SEVL[f.severity] || SEVL.medium;
+      return {
+        index: i, type: String(f.type || '').replace(/_/g, ' ').toUpperCase(), desc: f.description || '',
+        sevLabel: sl[0], sevColor: sl[1], redacted: !!f.redacted, btnLabel: f.redacted ? '✓ Redacted' : 'Redact',
+        btnStyle: `margin-top:9px; font-size:12px; cursor:${f.redacted ? 'default' : 'pointer'}; padding:6px 12px; border-radius:8px; border:1px solid var(--border-strong); background:${f.redacted ? 'rgba(52,211,153,.12)' : 'var(--card)'}; color:${f.redacted ? '#34d399' : 'var(--ink)'}; font-family:'Newsreader',Georgia,serif;`,
+      };
+    });
+    const vRisk = (s.vReport && s.vReport.risk_level) ? s.vReport.risk_level : 'unknown';
+    const vRiskDot = (vRisk === 'critical' || vRisk === 'high') ? '#fb7185' : (vRisk === 'medium' ? '#fbbf24' : '#34d399');
+    const histRows = (s.history || []).map((h) => ({ when: new Date(h.when).toLocaleString(), model: h.model, risk: String(h.risk || '—'), findings: String(h.findings) }));
+    const planNote = s.planNote || '';
+    const planNoteErr = planNote.indexOf('err:') === 0;
+    const planNoteText = planNote.replace(/^(ok:|err:)/, '');
+    const backendOn = this.backendConfigured();
+
+    return {
+      stageIdle: stage === 'idle',
+      stageAnalyzing: stage === 'analyzing',
+      stageResults: stage === 'results',
+      stageCleaning: stage === 'cleaning',
+      stageDone: stage === 'done',
+      showCTA: stage === 'results',
+      dragOver: s.dragOver,
+      hasError: !!s.error, error: s.error,
+      fileName: s.fileName, originalUrl: s.originalUrl, cleanUrl: s.cleanUrl,
+      leakCards, pins, faceBoxes, cleaningChips, removedChips,
+      analysisImg, cleaningImg, doneImg, sparkles, photoTiles, imgAspect: s.imgAspect || '4 / 3',
+      leakCount: n, hasLeaks: n > 0, noLeaks: n === 0,
+      panelKicker: 'EXPOSURE REPORT',
+      panelTitle: n ? (n + ' thing' + (n > 1 ? 's' : '') + ' this photo reveals about you') : 'No hidden data found',
+      panelCount: n ? String(n) : '',
+      panelTitleRest: n ? (' thing' + (n > 1 ? 's' : '') + ' this photo reveals about you') : 'No hidden data found',
+      panelSub: n
+        ? 'Each item is embedded invisibly in the file you share. One tap strips them all out.'
+        : 'Nothing identifying was embedded — we will still hand you a freshly re-encoded copy.',
+      ctaLabel: n ? 'Strip all & download clean photo' : 'Download a clean copy',
+      ctaNote: n
+        ? 'Re-encodes a fresh copy with zero embedded data. Your original is never changed.'
+        : 'Re-encodes a clean copy with no embedded data.',
+      grainOn: this.props.grain !== false,
+      onPick: this.onPick, onSample: this.onSample, onClean: this.onClean,
+      onDownload: this.onDownload, onReset: this.onReset, onToggleTheme: this.onToggleTheme, onNavClick: this.onNavClick, onLogoClick: this.onLogoClick,
+      onDragOver: this.onDragOver, onDragLeave: this.onDragLeave, onDrop: this.onDrop,
+      onCardMove: this.onCardMove, onCardLeave: this.onCardLeave,
+
+      // ── migrated features ──
+      plansOpen: s.plansOpen, creditsOpen: s.creditsOpen, historyView: s.modalTab === 'history', billingView: s.modalTab === 'billing',
+      hasPaidAccess: paidAccess, tier: s.tier,
+      tierLabel: s.tier === 'paid' ? 'Eclipse' : 'Aegis',
+      balanceText: '$' + (Number(s.balance) || 0).toFixed(2),
+      lowBalance: s.tier === 'paid' && (Number(s.balance) || 0) < 0.5,
+      showCreditsBadge: s.tier === 'paid',
+      modelOptions, chosenModelId: s.chosenModel, curModelLabel: curModel.label, showModelSwitcher: paidAccess,
+      costHints: this.COST_HINTS(),
+      vCollapsed: s.vStage === 'collapsed', vScanning: s.vStage === 'scanning', vResults: s.vStage === 'results',
+      vErrorState: s.vStage === 'error', vError: s.vError,
+      vBoxes, vCards, vHasFindings: vFindings.length > 0, vFindingCount: vFindings.length,
+      vSummary: s.vReport ? (s.vReport.summary || '') : '', hasVSummary: !!(s.vReport && s.vReport.summary),
+      vRiskDot, vIsDemo: s.vDemo, showDemoNote: !paidAccess && !backendOn,
+      vTitle: vFindings.length ? (vFindings.length + ' visible ' + (vFindings.length > 1 ? 'risks' : 'risk') + ' found') : 'No obvious visible risks',
+      canDownloadRedacted: paidAccess, vLockedDownload: !paidAccess,
+      histRows, hasHistory: (s.history || []).length > 0,
+      planNoteText, planNoteErr, hasPlanNote: !!planNote,
+      backendOn, signedIn: s.signedIn, email: s.email, showAuth: true,
+      authOpen: s.authOpen, accountView: s.modalTab === 'account',
+      accountSignedIn: s.signedIn, accountNotSignedIn: !s.signedIn,
+      accountEmail: s.email || 'Not signed in', accountPlan: s.tier === 'paid' ? 'Eclipse' : 'Aegis',
+      accountShowCredits: s.tier === 'paid', accountInitial: (s.email ? s.email[0] : 'X').toUpperCase(),
+      tabAccountColor: s.modalTab === 'account' ? 'var(--ink)' : 'var(--muted)',
+      notSignedIn: !s.signedIn, plansTab: s.modalTab === 'plans', noHistory: !((s.history || []).length > 0),
+      tabPlansColor: s.modalTab === 'plans' ? 'var(--ink)' : 'var(--muted)', tabBillingColor: s.modalTab === 'billing' ? 'var(--ink)' : 'var(--muted)', tabHistoryColor: s.modalTab === 'history' ? 'var(--ink)' : 'var(--muted)',
+      hasToast: !!s.toast, toast: s.toast, toastBorder: s.toastErr ? 'var(--border-strong)' : 'var(--gold)',
+      balanceColor: (s.tier === 'paid' && (Number(s.balance) || 0) < 0.5) ? '#fbbf24' : 'var(--ink)',
+      planNoteColor: planNoteErr ? '#fb7185' : 'var(--gold)',
+      onOpenPlans: this.onOpenPlans, onGoPlans: this.onGoPlans, onClosePlans: this.onClosePlans, onOpenHistory: this.onOpenHistory,
+      onShowPlansTab: this.onShowPlansTab, onShowBilling: this.onShowBilling, onCloseCredits: this.onCloseCredits, onStop: this.onStop,
+      onModelChange: this.onModelChange,
+      onAddCredits: this.onAddCredits, onRunVisual: this.onRunVisual, redactFinding: this.redactFinding,
+      onDownloadRedacted: this.onDownloadRedacted, onDownloadStripped: this.onDownloadStripped,
+      onSignIn: this.onSignIn, onSignOut: this.onSignOut, onOpenAuth: this.onOpenAuth, onCloseAuth: this.onCloseAuth,
+      onSignInGoogle: this.onSignInGoogle, onShowAccount: this.onShowAccount, onOpenAccount: this.onOpenAccount,
+      batchOpen: s.batchOpen, batchBusy: s.batchBusy, hasBatch: (s.batchItems || []).length > 0,
+      batchCountLabel: ((s.batchItems || []).length) + ((s.batchItems || []).length === 1 ? ' photo' : ' photos'),
+      batchCards: (s.batchItems || []).map((it, i) => ({ index: i, name: it.name, thumbStyle: 'display:block; width:100%; height:100px; background-image:url(' + it.url + '); background-size:cover; background-position:center;' })),
+      onBatchPick: this.onBatchPick, onAddMoreBatch: this.onAddMoreBatch, onRemoveBatch: this.onRemoveBatch, onCloseBatch: this.onCloseBatch, onDownloadZip: this.onDownloadZip,
+    };
+  }
+}
+</script>
+</body>
+</html>
