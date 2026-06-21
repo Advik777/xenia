@@ -100,6 +100,7 @@ export async function runVisionScan(
       },
       {
         model: env.MODEL_API_USERS_OPENROUTER,
+        reasoning_effort: 'xhigh',
         max_tokens: MAX_TOKENS,
         messages: buildMessages(base64Image),
       },
