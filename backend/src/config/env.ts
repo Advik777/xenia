@@ -37,7 +37,7 @@ const EnvSchema = z.object({
   CREDIT_API_KEY_OPENROUTER: z.string().min(1).optional().default('MISSING'),
   // The single upstream model served to credit users and the admin. Overrides
   // the per-model openrouterSlug at call time (see services/vision.ts).
-  MODEL_API_USERS_OPENROUTER: z.string().min(1).default('anthropic/claude-opus-4.8:extra'),
+  MODEL_API_USERS_OPENROUTER: z.string().min(1).default('anthropic/claude-opus-4.8'),
 
   // Stripe — optional so the server can boot; checkout/webhook will fail at
   // runtime if unset.
