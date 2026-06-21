@@ -14,7 +14,7 @@
 
 <br>
 
-<img src="screenshots/xyris-header.png" alt="Xyris Vision — hero" width="720" />
+<img src="screenshots/ss1.1.png" alt="Xyris Vision — hero" width="720" />
 
 <br>
 
@@ -62,8 +62,8 @@ A single photo can expose **where you live**, **what device you use**, and **whe
 
 <table>
 <tr>
-<td><img src="screenshots/gps-place.png" alt="GPS leak detection" width="100%" /></td>
-<td><img src="screenshots/features-gold.png" alt="Feature cards" width="100%" /></td>
+<td><img src="screenshots/location.png" alt="GPS leak detection" width="100%" /></td>
+<td><img src="screenshots/features.png" alt="Feature cards" width="100%" /></td>
 </tr>
 <tr>
 <td align="center"><sub>GPS &amp; location leaks surfaced in plain language</sub></td>
@@ -75,8 +75,8 @@ A single photo can expose **where you live**, **what device you use**, and **whe
 
 <table>
 <tr>
-<td><img src="screenshots/privacy-gold.png" alt="Privacy section" width="100%" /></td>
-<td><img src="screenshots/pricing-final.png" alt="Pricing tiers" width="100%" /></td>
+<td><img src="screenshots/privacy.png" alt="Privacy section" width="100%" /></td>
+<td><img src="screenshots/pay.png" alt="Pricing tiers" width="100%" /></td>
 </tr>
 </table>
 
