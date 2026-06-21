@@ -8,13 +8,7 @@
 
 <br>
 
-[![Live Demo](https://img.shields.io/badge/demo-xyrisvision.vercel.app-2dd4bf?style=for-the-badge&logo=vercel&logoColor=white)](https://xyrisvision.vercel.app)
-[![Hackathon](https://img.shields.io/badge/NJx-June%202026-8b5cf6?style=for-the-badge)](https://github.com/srirae/xenia)
-[![Privacy](https://img.shields.io/badge/Arc-Privacy-f472b6?style=for-the-badge)](https://github.com/srirae/xenia)
-
-<br>
-
-<img src="screenshots/ss1.1.png" alt="Xyris Vision — hero" width="720" />
+[![Live Demo](screenshots/ss1.1.png)](https://xyrisvision.vercel.app)
 
 <br>
 
