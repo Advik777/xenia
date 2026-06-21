@@ -9,6 +9,7 @@ import { CLIENT_MODELS, DEFAULT_MODEL_ID } from '@/lib/models';
 import { getByokKey } from '@/lib/byok';
 import { useBalance } from './BalanceContext';
 import { CreditsModal } from './CreditsModal';
+import { HexMosaic } from './HexMosaic';
 
 type Stage = 'idle' | 'reading' | 'scanning' | 'results' | 'error';
 
@@ -515,48 +516,40 @@ function Dropzone({
 
 function ScanningView({ stage, cleanUrl }: { stage: Stage; cleanUrl: string | null }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22, padding: '40px 0' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, letterSpacing: '.16em', color: 'var(--teal)' }}>
-        <span
-          style={{
-            width: 6,
-            height: 6,
-            borderRadius: '50%',
-            background: 'var(--teal)',
-            boxShadow: '0 0 8px var(--teal)',
-            animation: 'dotPulse 1.4s ease-in-out infinite',
-          }}
-        />
-        {stage === 'reading' ? 'READING HIDDEN DATA' : 'SENDING TO NVIDIA NIM FOR ANALYSIS'}
-      </div>
-      <div
-        style={{
-          position: 'relative',
-          width: '100%',
-          maxWidth: 520,
-          borderRadius: 18,
-          overflow: 'hidden',
-          border: '1px solid var(--color-border)',
-          minHeight: 200,
-          background: 'var(--color-card)',
-        }}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        {cleanUrl && <img src={cleanUrl} alt="" style={{ display: 'block', width: '100%' }} />}
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 30, padding: '32px 0' }}>
+      {cleanUrl ? (
+        <HexMosaic src={cleanUrl} />
+      ) : (
         <div
           style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            height: 2,
-            background: 'linear-gradient(90deg,transparent,var(--teal) 30%,var(--pink) 70%,transparent)',
-            boxShadow: '0 0 20px var(--teal)',
-            animation: 'scanMove 2.1s ease-in-out infinite',
+            width: 'min(86vw, 460px)',
+            aspectRatio: '4 / 3',
+            borderRadius: 16,
+            background: 'var(--color-card)',
+            border: '1px solid var(--color-border)',
           }}
         />
-      </div>
-      <div style={{ fontSize: 15, color: 'var(--color-muted)' }}>
-        {stage === 'reading' ? 'Inspecting metadata & stripping it locally…' : 'Analysing the image for visible privacy risks…'}
+      )}
+      <div style={{ textAlign: 'center' }}>
+        <div
+          className="font-display"
+          style={{
+            fontSize: 'clamp(22px,4vw,30px)',
+            background: 'linear-gradient(110deg,#ff5e9c,#c06bff,#5b8cff,#34e0c7,#ffd23f,#ff5e9c)',
+            backgroundSize: '300% auto',
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+            color: 'transparent',
+            animation: 'textShimmer 4s linear infinite',
+          }}
+        >
+          {stage === 'reading' ? 'Reading your photo…' : 'Scanning for what leaks…'}
+        </div>
+        <div style={{ marginTop: 10, fontSize: 14, color: 'var(--color-muted)' }}>
+          {stage === 'reading'
+            ? 'Stripping hidden location, device & timestamp data on your device'
+            : 'Analysing the image for visible privacy risks'}
+        </div>
       </div>
     </div>
   );

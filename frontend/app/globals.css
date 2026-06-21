@@ -81,6 +81,14 @@ a {
     transform: rotate(-360deg);
   }
 }
+@keyframes sheen {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -120% 0;
+  }
+}
 @keyframes scanMove {
   0% {
     top: -3%;
@@ -116,6 +124,33 @@ a {
   }
   100% {
     background-position: 300% 50%;
+  }
+}
+/* Hexagon mosaic: cells assemble in from scattered positions … */
+@keyframes hexIn {
+  0% {
+    transform: translate(var(--hx), var(--hy)) rotate(var(--hr)) scale(0.32);
+    opacity: 0;
+    filter: blur(6px);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(1.5px);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+/* … then keep gently drifting so they read as "movable". */
+@keyframes hexFloat {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(var(--fx), var(--fy)) rotate(var(--fr));
   }
 }
 /* Animated theme-toggle face flip, matching the XenLens design */
