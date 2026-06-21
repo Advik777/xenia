@@ -770,8 +770,10 @@ class Component extends DCLogic {
     try { t = localStorage.getItem('veil-theme') || 'dark'; } catch (e) {}
     this.setState({ theme: t });
     this.applyTheme(t);
-    this.loadFeatureState();
-    this.handleCheckoutReturn();
+    void this.initAuth().then(() => {
+      this.loadFeatureState();
+      this.handleCheckoutReturn();
+    });
     this._onScroll = () => {
       const s = window.scrollY > 24;
       if (s !== this._scrolled) {
@@ -1212,9 +1214,46 @@ class Component extends DCLogic {
         document.head.appendChild(s);
       });
     }
-    this._sb = window.supabase.createClient(c.supabaseUrl, c.supabaseAnonKey);
+    this._sb = window.supabase.createClient(c.supabaseUrl, c.supabaseAnonKey, {
+      auth: {
+        flowType: 'pkce',
+        detectSessionInUrl: true,
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+    });
     return this._sb;
   }
+
+  /** Finish Google OAuth redirect (PKCE ?code=…) and subscribe to session changes. */
+  async initAuth() {
+    const sb = await this.getSupabase();
+    if (!sb) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    if (code) {
+      const { error } = await sb.auth.exchangeCodeForSession(code);
+      if (error) {
+        this.setState({ toast: 'Sign-in failed — please try again.', toastErr: true });
+      } else {
+        this.setState({ authOpen: false, toast: 'Signed in successfully.', toastErr: false });
+      }
+      const clean = window.location.pathname + (window.location.hash || '');
+      window.history.replaceState({}, '', clean);
+    }
+
+    if (!this._authSub) {
+      this._authSub = sb.auth.onAuthStateChange((_event, session) => {
+        this.setState({
+          signedIn: !!session,
+          email: session && session.user ? session.user.email : null,
+        });
+        if (session) void this.loadFeatureState();
+      });
+    }
+  }
+
   async getSession() {
     try { const sb = await this.getSupabase(); if (!sb) return null; const { data } = await sb.auth.getSession(); return (data && data.session) || null; } catch (e) { return null; }
   }
@@ -1225,16 +1264,40 @@ class Component extends DCLogic {
     if (session && session.access_token) headers['Authorization'] = 'Bearer ' + session.access_token;
     const res = await fetch(c.apiUrl + path, Object.assign({}, init, { headers }));
     let body = null; try { body = await res.json(); } catch (e) {}
-    if (!res.ok) { const err = new Error((body && body.error) || ('Request failed (' + res.status + ')')); err.status = res.status; err.code = body && body.code; throw err; }
+    if (!res.ok) {
+      const err = new Error('request failed');
+      err.status = res.status;
+      err.code = body && body.code;
+      throw err;
+    }
     return body;
+  }
+
+  /** Map HTTP status / codes to plain messages — never show raw server text. */
+  friendlyError(err, fallback) {
+    const fb = fallback || 'Something went wrong. Please try again.';
+    if (!err) return fb;
+    const status = err.status;
+    const code = err.code;
+    if (status === 401 || code === 'NO_TOKEN' || code === 'INVALID_TOKEN') return 'Please sign in to continue.';
+    if (status === 402 || code === 'CREDITS_EXHAUSTED') return 'Your credits have run out. Add more to keep scanning.';
+    if (status === 429) return 'You\'re scanning too fast — wait a moment and try again.';
+    if (status === 503) return 'Scanning is temporarily unavailable. Please try again in a few minutes.';
+    if (status === 502) return 'The scan could not be completed. Please try again.';
+    if (status === 404) return 'We could not find your account. Try signing out and back in.';
+    if (status === 400) return 'That request could not be processed. Please try again.';
+    if (status === 500) return 'Something went wrong on our side. Please try again.';
+    if (!status && (err.message === 'Failed to fetch' || err.name === 'TypeError')) return 'Could not reach the server. Check your connection and try again.';
+    return fb;
   }
   onSignIn = () => this.setState({ authOpen: true, planNote: '' });
   onOpenAuth = () => this.setState({ authOpen: true, planNote: '' });
   onCloseAuth = () => this.setState({ authOpen: false });
   onSignInWith = async (provider) => {
     const sb = await this.getSupabase();
-    if (!sb) { this.setState({ authOpen: false, plansOpen: true, modalTab: 'account', planNote: 'err:Sign-in needs the backend configured (window.XENLENS_CONFIG) — see DEPLOY.md.' }); return; }
-    await sb.auth.signInWithOAuth({ provider, options: { redirectTo: window.location.href } });
+    if (!sb) { this.setState({ authOpen: false, plansOpen: true, modalTab: 'account', planNote: 'err:Sign-in is not available right now. Please try again later.' }); return; }
+    const redirectTo = window.location.origin + window.location.pathname;
+    await sb.auth.signInWithOAuth({ provider, options: { redirectTo } });
   };
   onSignInGoogle = () => this.onSignInWith('google');
   onSignOut = async () => {
@@ -1324,7 +1387,7 @@ class Component extends DCLogic {
     }
     const c = this.APP_CONFIG();
     if (!c.apiUrl || !c.supabaseUrl) {
-      this.setState({ planNote: 'err:Payments need the backend configured (window.XENLENS_CONFIG) — see DEPLOY.md.' });
+      this.setState({ planNote: 'err:Payments are not available right now. Please try again later.' });
       return;
     }
     try {
@@ -1332,8 +1395,8 @@ class Component extends DCLogic {
       if (!session) { await this.onSignIn(); return; }
       const data = await this.apiFetch('/api/stripe/checkout', { method: 'POST' });
       if (data && data.url) { window.location.href = data.url; return; }
-      this.setState({ planNote: 'err:Could not start checkout. Please try again.' });
-    } catch (e) { this.setState({ planNote: 'err:Could not start checkout. Please try again.' }); }
+      this.setState({ planNote: 'err:' + this.friendlyError(null, 'Could not start checkout. Please try again.') });
+    } catch (e) { this.setState({ planNote: 'err:' + this.friendlyError(e, 'Could not start checkout. Please try again.') }); }
   };
 
   // ─────────────────────────── migrated: AI visual scan ────────────────────
@@ -1386,7 +1449,7 @@ class Component extends DCLogic {
       } catch (e) {
         if (e && (e.status === 402 || e.code === 'CREDITS_EXHAUSTED')) { this.setState({ vStage: 'collapsed', creditsOpen: true }); return; }
         if (e && e.status === 401) { this.setState({ vStage: 'error', vError: 'Please sign in to run a scan.' }); return; }
-        this.setState({ vStage: 'error', vError: (e && e.message) || 'Scan failed. Please try again.' }); return;
+        this.setState({ vStage: 'error', vError: this.friendlyError(e, 'Scan failed. Please try again.') }); return;
       }
     } else {
       await new Promise((r) => setTimeout(r, 1600));

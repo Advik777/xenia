@@ -1,5 +1,13 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
+
+// Load `.env` from backend/ first, then repo root (../.env) so secrets work
+// whether you run from `backend/` or keep a single root-level `.env`.
+const __configDir = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__configDir, '../../.env') });
+dotenv.config({ path: path.resolve(__configDir, '../../../.env') });
 
 /**
  * Centralised, validated environment. We fail fast at boot if a required
@@ -22,9 +30,9 @@ const EnvSchema = z.object({
 
   // Supabase — optional so the server can start without them; auth/DB calls
   // will fail at runtime if unset (clear error at call site).
-  SUPABASE_URL: z.string().url().optional().default('https://placeholder.supabase.co'),
-  SUPABASE_ANON_KEY: z.string().min(1).optional().default('MISSING'),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional().default('MISSING'),
+  SUPABASE_URL: z.string().url().optional().default('https://placeholder.supabase.co').transform((s) => s.trim()),
+  SUPABASE_ANON_KEY: z.string().min(1).optional().default('MISSING').transform((s) => s.trim()),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional().default('MISSING').transform((s) => s.trim()),
 
   // Legacy / fallback vision keys. Now OPTIONAL: free users get on-device
   // metadata extraction (no server call), and every paid ("credit") + admin

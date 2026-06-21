@@ -8,6 +8,7 @@ import { MODEL_REGISTRY, isModelId, DEFAULT_MODEL_ID } from '../lib/models.js';
 import { calculateScanCost } from '../lib/billing.js';
 import { runVisionScan, parseReport } from '../services/vision.js';
 import { env } from '../config/env.js';
+import { UserErrors } from '../lib/userErrors.js';
 
 export const analyzeRouter = Router();
 
@@ -19,13 +20,13 @@ const MAX_BASE64_LEN = 18_000_000;
 const BodySchema = z.object({
   base64Image: z
     .string()
-    .min(1, 'No image provided.')
-    .max(MAX_BASE64_LEN, 'Image too large.')
-    .regex(/^[A-Za-z0-9+/]+={0,2}$/, 'Image must be raw base64 (no data URL prefix).'),
+    .min(1, UserErrors.noImage)
+    .max(MAX_BASE64_LEN, UserErrors.imageTooLarge)
+    .regex(/^[A-Za-z0-9+/]+={0,2}$/, UserErrors.invalidImage),
   chosenModel: z
     .string()
     .default(DEFAULT_MODEL_ID)
-    .refine(isModelId, 'Invalid model selection.'),
+    .refine(isModelId, UserErrors.invalidModel),
 });
 
 /**
@@ -52,7 +53,7 @@ analyzeRouter.post(
     const parsed = BodySchema.safeParse(req.body);
     if (!parsed.success) {
       const first = parsed.error.issues[0];
-      return res.status(400).json({ error: first?.message ?? 'Invalid request.' });
+      return res.status(400).json({ error: first?.message ?? UserErrors.invalidRequest });
     }
     const { base64Image, chosenModel } = parsed.data;
     const modelConfig = MODEL_REGISTRY[chosenModel];
@@ -66,7 +67,7 @@ analyzeRouter.post(
       .single();
 
     if (profileError || !profile) {
-      return res.status(404).json({ error: 'User profile not found.' });
+      return res.status(404).json({ error: UserErrors.profileNotFound });
     }
 
     const isPaidTier = profile.tier === 'paid';
@@ -80,7 +81,7 @@ analyzeRouter.post(
         // Idempotently reset tier so future calls short-circuit here.
         if (isPaidTier) await supabaseAdmin.rpc('deduct_balance', { uid: user.id, amount: 0 });
         return res.status(402).json({
-          error: 'This model needs credits.',
+          error: UserErrors.creditsRequired,
           code: 'CREDITS_EXHAUSTED',
         });
       }
@@ -88,7 +89,7 @@ analyzeRouter.post(
 
     // ── Vision call ──────────────────────────────────────────────────────────
     if (env.CREDIT_API_KEY_OPENROUTER === 'MISSING') {
-      return res.status(503).json({ error: 'The backend is missing the OpenRouter API key. Please set CREDIT_API_KEY_OPENROUTER in Render Environment Variables.' });
+      return res.status(503).json({ error: UserErrors.scanUnavailable });
     }
 
     let text, usage;
@@ -99,8 +100,7 @@ analyzeRouter.post(
     } catch (err: unknown) {
       // eslint-disable-next-line no-console
       console.error('runVisionScan failed:', err);
-      const msg = err instanceof Error ? err.message : 'Unknown AI error';
-      return res.status(502).json({ error: `AI Provider Error: ${msg}` });
+      return res.status(502).json({ error: UserErrors.scanFailed });
     }
     
     const report = parseReport(text);
@@ -123,7 +123,7 @@ analyzeRouter.post(
       if (deductError) {
         // eslint-disable-next-line no-console
         console.error('deduct_balance failed:', deductError);
-        return res.status(500).json({ error: 'Failed to settle scan cost.' });
+        return res.status(500).json({ error: UserErrors.scanCostFailed });
       }
       remainingBalance = Number(newBalanceRaw ?? Math.max(0, balance - scanCost));
       creditsExhausted = remainingBalance <= 0;

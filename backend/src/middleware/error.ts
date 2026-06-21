@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
-import { isProd } from '../config/env.js';
+import { UserErrors } from '../lib/userErrors.js';
 
 /** Wraps an async route handler so thrown errors reach the error middleware. */
 export function asyncHandler(
@@ -11,7 +11,7 @@ export function asyncHandler(
 }
 
 export function notFound(_req: Request, res: Response) {
-  res.status(404).json({ error: 'Not found' });
+  res.status(404).json({ error: UserErrors.notFound });
 }
 
 // Express needs the 4-arg signature to recognise this as an error handler.
@@ -20,8 +20,5 @@ export function errorHandler(err: unknown, _req: Request, res: Response, _next: 
   // eslint-disable-next-line no-console
   console.error('Unhandled error:', err);
   if (res.headersSent) return;
-  res.status(500).json({
-    error: 'Internal server error',
-    ...(isProd ? {} : { detail: err instanceof Error ? err.message : String(err) }),
-  });
+  res.status(500).json({ error: UserErrors.serverError });
 }

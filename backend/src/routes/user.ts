@@ -5,6 +5,7 @@ import { asyncHandler } from '../middleware/error.js';
 import { supabaseAdmin } from '../lib/supabase.js';
 import { publicModelCatalog } from '../lib/models.js';
 import { env } from '../config/env.js';
+import { UserErrors } from '../lib/userErrors.js';
 
 export const userRouter = Router();
 
@@ -54,7 +55,7 @@ userRouter.get(
       .order('created_at', { ascending: false })
       .limit(limit);
 
-    if (error) return res.status(500).json({ error: 'Could not load scan history.' });
+    if (error) return res.status(500).json({ error: UserErrors.historyFailed });
     res.json({ scans: data ?? [] });
   }),
 );

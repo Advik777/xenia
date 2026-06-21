@@ -1,14 +1,21 @@
 // ============================================================================
 //  Xyris Vision — frontend runtime config
-//  Fill these in to connect the live backend (Supabase auth + Express API +
-//  Stripe). Leave them BLANK to run in on-device / demo mode — the app
-//  works fully without a backend, it just won't do server-side credits or auth.
+//
+//  Production:  Vercel  → https://xyrisvision.vercel.app
+//  Backend API: Render  → https://xenlens-backend.onrender.com
+//
 //  Only public values belong here. Never put a service-role / secret key in this file.
 // ============================================================================
+
+const PRODUCTION_API = 'https://xenlens-backend.onrender.com';
+
+const isLocal =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
 window.XENLENS_CONFIG = {
-  // Base URL of the deployed Express backend (the `backend/` folder).
-  // e.g. "https://xenlens-api.onrender.com"
-  apiUrl: 'https://xenlens-backend.onrender.com',
+  // Render Express API. Local dev uses localhost; Vercel production uses Render.
+  apiUrl: isLocal ? 'http://localhost:4000' : PRODUCTION_API,
 
   // Supabase project URL + anon (public) key — safe to expose by design.
   supabaseUrl: 'https://xhsxnelygnibwhmxhwob.supabase.co',

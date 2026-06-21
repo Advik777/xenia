@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import type { User } from '@supabase/supabase-js';
 import { getUserFromToken } from '../lib/supabase.js';
+import { UserErrors } from '../lib/userErrors.js';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -21,12 +22,12 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
   const match = /^Bearer\s+(.+)$/i.exec(header);
 
   if (!match) {
-    return res.status(401).json({ error: 'Unauthorized', code: 'NO_TOKEN' });
+    return res.status(401).json({ error: UserErrors.signInRequired, code: 'NO_TOKEN' });
   }
 
   const user = await getUserFromToken(match[1]!.trim());
   if (!user) {
-    return res.status(401).json({ error: 'Unauthorized', code: 'INVALID_TOKEN' });
+    return res.status(401).json({ error: UserErrors.signInRequired, code: 'INVALID_TOKEN' });
   }
 
   req.user = user;
