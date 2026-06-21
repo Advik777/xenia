@@ -20,9 +20,11 @@ const EnvSchema = z.object({
         .filter(Boolean),
     ),
 
-  SUPABASE_URL: z.string().url(),
-  SUPABASE_ANON_KEY: z.string().min(1),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+  // Supabase — optional so the server can start without them; auth/DB calls
+  // will fail at runtime if unset (clear error at call site).
+  SUPABASE_URL: z.string().url().optional().default('https://placeholder.supabase.co'),
+  SUPABASE_ANON_KEY: z.string().min(1).optional().default('MISSING'),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional().default('MISSING'),
 
   // Legacy / fallback vision keys. Now OPTIONAL: free users get on-device
   // metadata extraction (no server call), and every paid ("credit") + admin
@@ -30,18 +32,18 @@ const EnvSchema = z.object({
   NVIDIA_NIM_API_KEY: z.string().min(1).optional(),
   OPENROUTER_API_KEY: z.string().min(1).optional(),
 
-  // The OpenRouter key that BILLS all paid ("credit") and admin scans. This is
-  // the only vision key the app actually needs to run. The admin account
-  // (ADMIN_EMAIL) uses it for free; credit users have their usage burned down
-  // against their virtual_balance.
-  CREDIT_API_KEY_OPENROUTER: z.string().min(1),
+  // The OpenRouter key that BILLS all paid ("credit") and admin scans. Optional
+  // so the server can boot; vision scans will fail at runtime if unset.
+  CREDIT_API_KEY_OPENROUTER: z.string().min(1).optional().default('MISSING'),
   // The single upstream model served to credit users and the admin. Overrides
   // the per-model openrouterSlug at call time (see services/vision.ts).
   MODEL_API_USERS_OPENROUTER: z.string().min(1).default('anthropic/claude-opus-4.8:extra'),
 
-  STRIPE_SECRET_KEY: z.string().min(1),
-  STRIPE_WEBHOOK_SECRET: z.string().min(1),
-  STRIPE_PRICE_ID: z.string().min(1),
+  // Stripe — optional so the server can boot; checkout/webhook will fail at
+  // runtime if unset.
+  STRIPE_SECRET_KEY: z.string().min(1).optional().default('MISSING'),
+  STRIPE_WEBHOOK_SECRET: z.string().min(1).optional().default('MISSING'),
+  STRIPE_PRICE_ID: z.string().min(1).optional().default('MISSING'),
   CREDITS_GRANTED_USD: z.coerce.number().positive().default(5.0),
 
   APP_URL: z.string().url().default('http://localhost:3000'),
@@ -68,3 +70,20 @@ if (!parsed.success) {
 
 export const env = parsed.data;
 export const isProd = env.NODE_ENV === 'production';
+
+// --- Boot-time warnings for missing keys --------------------------------
+const _missing: string[] = [];
+if (env.SUPABASE_ANON_KEY === 'MISSING') _missing.push('SUPABASE_ANON_KEY');
+if (env.SUPABASE_SERVICE_ROLE_KEY === 'MISSING') _missing.push('SUPABASE_SERVICE_ROLE_KEY');
+if (env.CREDIT_API_KEY_OPENROUTER === 'MISSING') _missing.push('CREDIT_API_KEY_OPENROUTER');
+if (env.STRIPE_SECRET_KEY === 'MISSING') _missing.push('STRIPE_SECRET_KEY');
+if (env.STRIPE_WEBHOOK_SECRET === 'MISSING') _missing.push('STRIPE_WEBHOOK_SECRET');
+if (env.STRIPE_PRICE_ID === 'MISSING') _missing.push('STRIPE_PRICE_ID');
+if (_missing.length) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    `\n⚠ Server starting with ${_missing.length} missing key(s):\n` +
+      _missing.map((k) => `  • ${k}`).join('\n') +
+      '\n  Set them in Render → Environment Variables to enable full functionality.\n',
+  );
+}
